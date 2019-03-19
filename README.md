@@ -1,8 +1,10 @@
 # Ceuta OPEN
 ## An open access database of snowy plover breeding ecology
-#### Luke J. Eberhart-Phillips, Medardo Cruz-López, Clemens Küpper
+#### Luke J. Eberhart-Phillips, Medardo Cruz-López, and Clemens Küpper
 
 In this repository you can find all the raw data we have collected from >1,300 individually marked snowy plovers (_Charadrius nivosus_) monitored between 2006 and 2012 at Bahía de Ceuta – an important breeding site in western Mexico.
+
+Here
 
 **`Ceuta_OPEN.sqlite`** contains the SQL (Structured Query Language) database of the following 5 tables:
 
@@ -29,31 +31,31 @@ In this repository you can find all the raw data we have collected from >1,300 i
   20.	`length1`: length in mm of egg #1
   21.	`width1`: width in mm of egg #1  
   22.	`float1`: float score of egg #1 as defined on page 5 of [Székely, Kosztolányi, and Küpper (2008)](https://www.researchgate.net/publication/228494424_Practical_guide_for_investigating_breeding_ecology_of_Kentish_plover_Charadrius_alexandrinus "Practical guide for investigating breeding ecology of Kentish plover Charadrius alexandrinus")
-  23.	`length2`: length in mm of egg #2
-  24.	`width2`: width in mm of egg #2
+  23.	`length2`: length in millimeters of egg #2
+  24.	`width2`: width in millimeters of egg #2
   25.	`float2`: float score of egg #2 as defined on page 5 of [Székely, Kosztolányi, and Küpper (2008)](https://www.researchgate.net/publication/228494424_Practical_guide_for_investigating_breeding_ecology_of_Kentish_plover_Charadrius_alexandrinus "Practical guide for investigating breeding ecology of Kentish plover Charadrius alexandrinus")
-  26.	`length3`: length in mm of egg #3
-  27.	`width3`: width in mm of egg #3
+  26.	`length3`: length in millimeters of egg #3
+  27.	`width3`: width in millimeters of egg #3
   28.	`float3`: float score of egg #3 as defined on page 5 of [Székely, Kosztolányi, and Küpper (2008)](https://www.researchgate.net/publication/228494424_Practical_guide_for_investigating_breeding_ecology_of_Kentish_plover_Charadrius_alexandrinus "Practical guide for investigating breeding ecology of Kentish plover Charadrius alexandrinus")
   29.	`photo`: indication of if a photo of the nest was taken (1) or not (0)
   30.	`observer`: initials of observer collecting the data
   31.	`comments`: miscellaneous comments pertinent to the nest's observation
 
   B. **`Broods`** – a table of all broods found and monitored. Columns are defined as:
-  1.	`species`
-  2.	`population`
-  3.	`year`
-  4.	`site`
-  5.	`brood`
-  6.	`ID`
-  7.	`easting`
-  8.	`northing`
-  9.	`utm`
-  10.	`date`
-  11.	`time`
-  12.	`distance`
-  13.	`degree`
-  14.	`parents`
+  1.	`species`: species of plover (all snowy plover in this case)
+  2.	`population`: population at which the data were collected (all Ceuta in this case)
+  3.	`year`: year during which the data were collected
+  4.	`site`: site at which the data were collected
+  5.	`brood`: the ID for a given brood (unique within year and within site). Broods originating from known nests retain the ID found in the **`Nests`** table, whereas broods hatching from unknown nests have a negative ID (e.g., `-2`)
+  6.	`ID`: a concatonation of `year`, `site`, and `brood` to make a unique value
+  7.	`easting`: UTM easting
+  8.	`northing`: UTM northing
+  9.	`utm`: UTM zone
+  10.	`date`: date brood observation was made (mdd format)
+  11.	`time`: time brood observation was made (24h format)
+  12.	`distance`: estimated distance in meters between brood and observer
+  13.	`degree`: estimated bearing of the brood relative to the observer (i.e., the number of degrees in the angle measured in a clockwise direction from the north line to the line joining the observer to the brood)
+  14.	`parents`: 
   15.	`male`
   16.	`female`
   17.	`chicks`
