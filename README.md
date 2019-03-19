@@ -7,9 +7,9 @@ In this repository you can find all the raw data we have collected from >1,300 i
 **`Ceuta_OPEN.sqlite`** contains the SQL (Structured Query Language) database of the following tables:
 
   - **`Nests`**:
-    1.	`species`
+      1.	`species`
     2.	`population`
-    3.	`year`
+        3.	`year`
   4.	`site`
   5.	`nest`
   6.	`ID`
