@@ -6,7 +6,7 @@ In this repository you can find all the raw data we have collected from >1,300 i
 
 **`Ceuta_OPEN.sqlite`** contains the SQL (Structured Query Language) database of the following 5 tables:
 
-  A. **`Nests`** -- a table of all nests found and monitored. Columns are defined as:
+  A. **`Nests`** – a table of all nests found and monitored. Columns are defined as:
   1.	`species`: species of plover ()
   2.	`population`
   3.	`year`
@@ -39,7 +39,7 @@ In this repository you can find all the raw data we have collected from >1,300 i
   30.	`observer`
   31.	`comments`
 
-  B. **`Broods`** -- a table of all broods found and monitored. Columns are defined as:
+  B. **`Broods`** – a table of all broods found and monitored. Columns are defined as:
   1.	`species`
   2.	`population`
   3.	`year`
@@ -62,7 +62,7 @@ In this repository you can find all the raw data we have collected from >1,300 i
   20.	`observer`
   21.	`comments`
 
-  C. **`Captures`** -- a table of all captures made. Columns are defined as:
+  C. **`Captures`** – a table of all captures made. Columns are defined as:
   1.	`species`
   2.	`population`
   3.	`year`
@@ -94,7 +94,7 @@ In this repository you can find all the raw data we have collected from >1,300 i
   29.	`observer`
   30.	`comments`
 
-  D. **`Resights`** -- a table of all resightings of color-marked individuals. Columns are defined as:
+  D. **`Resights`** – a table of all resightings of color-marked individuals. Columns are defined as:
   1.	`species`
   2.	`population`
   3.	`year`
@@ -112,7 +112,7 @@ In this repository you can find all the raw data we have collected from >1,300 i
   15.	`observer`
   16.	`comments`
 
-  E. **`BirdRef`** -- a table of all families monitored and the identification of their members. Columns are defined as:
+  E. **`BirdRef`** – a table of all families monitored and the identification of their members. Columns are defined as:
   1.	`species`
   2.	`population`
   3.	`year`
