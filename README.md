@@ -156,4 +156,4 @@ In this repository you can find all the raw data we have collected from >1,300 i
   16.	`manip`: date of the experimental manipulation (in mdd format)
   </details>
   
-[![Ceuta Snowy Plovers](https://lukeeberhartphillips.files.wordpress.com/2019/03/ceuta_logo.png)](https://www.youtube.com/watch?v=h4OxHZXADA8)
+[![Ceuta Snowy Plovers](https://lukeeberhartphillips.files.wordpress.com/2019/03/ceuta_open_logo_cut-1.png)](https://www.youtube.com/watch?v=h4OxHZXADA8)
