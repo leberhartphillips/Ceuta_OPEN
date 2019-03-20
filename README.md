@@ -132,7 +132,6 @@ In this repository you can find all the raw data we have collected from >1,300 i
   16.	`comments`: miscellaneous comments pertinent to the resighting
   </details>
   
-  
   <details>
   <summary>E. <b><code>BirdRef</code></b> – a table of all families monitored and the identification of their members.</summary>
 
