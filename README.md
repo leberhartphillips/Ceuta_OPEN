@@ -6,7 +6,10 @@ In this repository you can find all the raw data we have collected from >1,300 i
 
 **`Ceuta_OPEN.sqlite`** contains the SQL (Structured Query Language) database of the following 5 tables:
 
-  A. **`Nests`** – a table of all nests found and monitored. Columns are defined as:
+  <details>
+  <summary>A. <b><code>Nests</code></b></summary>
+  
+  – a table of all nests found and monitored. Columns are defined as:
   1.	`species`: species of plover (all snowy plover in this case)
   2.	`population`: population at which nest was monitored (all Ceuta in this case)
   3.	`year`: year during which nest was monitored
@@ -38,8 +41,12 @@ In this repository you can find all the raw data we have collected from >1,300 i
   29.	`photo`: indication if a photo of nest was taken (1) or not (0)
   30.	`observer`: initials of observer who found nest
   31.	`comments`: miscellaneous comments pertinent to nest's observation
-
-  B. **`Broods`** – a table of all broods found and monitored. Columns are defined as:
+  </details>
+  
+  <details>
+  <summary>B. <b><code>Broods</code></b></summary>
+  
+  – a table of all broods found and monitored. Columns are defined as:
   1.	`species`: species of plover (all snowy plover in this case)
   2.	`population`: population at which brood was observed (all Ceuta in this case)
   3.	`year`: year during which brood was observed
@@ -61,8 +68,12 @@ In this repository you can find all the raw data we have collected from >1,300 i
   19.	`photo`: indication if a photo of the brood was taken (1) or not (0)
   20.	`observer`: initials of observer making brood observation
   21.	`comments`: miscellaneous comments pertinent to brood's observation
+  </details>
 
-  C. **`Captures`** – a table of all captures made. Columns are defined as:
+  <details>
+  <summary>C. <b><code>Captures</code></b></summary>
+  
+  – a table of all captures made. Columns are defined as:
   1.	`species`: species of plover captured (all snowy plover in this case)
   2.	`population`: population at which capture was made (all Ceuta in this case)
   3.	`year`: year during which capture was made
@@ -93,8 +104,12 @@ In this repository you can find all the raw data we have collected from >1,300 i
   28.	`photo`: indication if a photo of captured individual was taken (1) or not (0)
   29.	`observer`: initials of observer making capture
   30.	`comments`: miscellaneous comments pertinent to capture event
+  </details>
 
-  D. **`Resights`** – a table of all resightings of color-marked individuals. Columns are defined as:
+  <details>
+  <summary>D. <b><code>Resights</code></b></summary>
+  
+  – a table of all resightings of color-marked individuals. Columns are defined as:
   1.	`species`: species of plover (all snowy plover in this case)
   2.	`population`: population at which resighting was made (all Ceuta in this case)
   3.	`year`: year during which resighting was made
@@ -111,9 +126,11 @@ In this repository you can find all the raw data we have collected from >1,300 i
   14.	`census`: indication if the resighting was conducted as part of a census count (1) or not (0)
   15.	`observer`: initials of observer making resighting
   16.	`comments`: miscellaneous comments pertinent to the resighting
-
-<details>
-  <summary>E.```c# **`BirdRef`** \```</summary>
+  </details>
+  
+  
+  <details>
+  <summary>E. <b><code>BirdRef</code></b></summary>
 
   – a table of all families monitored and the identification of their members. Columns are defined as:
   1.	`species`: species of plover (all snowy plover in this case)
