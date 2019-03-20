@@ -10,6 +10,7 @@ In this repository you can find all the raw data we have collected from >1,300 i
   <summary>A. <b><code>Nests</code></b> – a table of all nests found and monitored.</summary>
   
   Columns are defined as:
+
   1.	`species`: species of plover (all snowy plover in this case)
   2.	`population`: population at which nest was monitored (all Ceuta in this case)
   3.	`year`: year during which nest was monitored
@@ -47,6 +48,7 @@ In this repository you can find all the raw data we have collected from >1,300 i
   <summary>B. <b><code>Broods</code></b> – a table of all broods found and monitored.</summary>
   
   Columns are defined as:
+  
   1.	`species`: species of plover (all snowy plover in this case)
   2.	`population`: population at which brood was observed (all Ceuta in this case)
   3.	`year`: year during which brood was observed
@@ -74,6 +76,7 @@ In this repository you can find all the raw data we have collected from >1,300 i
   <summary>C. <b><code>Captures</code></b> – a table of all captures made.</summary>
   
   Columns are defined as:
+  
   1.	`species`: species of plover captured (all snowy plover in this case)
   2.	`population`: population at which capture was made (all Ceuta in this case)
   3.	`year`: year during which capture was made
@@ -94,7 +97,7 @@ In this repository you can find all the raw data we have collected from >1,300 i
   18.	`bill`: length in millimeters of upper mandible of captured individual. Measured as the distance between the tip of the forehead feathering at the base of the upper bill, along the ridge of the culmen, and the tip of the bill (also known as the "exposed culmen" measurement; _sensu_ page 8 of Pyle, P. 1997. Identification guide to North American birds. Part 1, Columbidae to Ploceidae. State Creek Press, Bolinas, CA)
   19.	`left_tarsus`: length in millimeters of left tarsus of captured individual. Measured as the distance between the notch at the end of the lateral condyle of the tibiotarsus on the backside of the leg, to the last tarsal scute on the front of the leg at the base of the foot (also known as the "outside tarsus" or "diagonal tarsus" measurement; _sensu_ page 11 of Pyle, P. 1997. Identification guide to North American birds. Part 1, Columbidae to Ploceidae. State Creek Press, Bolinas, CA)
   20.	`right_tarsus`: same as `left_tarsus` measurement above but for right leg of captured individual
-  21.	`left_wing`: length in millimeters of left wing of captured individual. Measured as the distance from the carpal joint (the bed of the wing) to the longest primary feather whilst flattening the wing and straightening the primaries (also known as the "maximum flat" or "flattened and straightened" measurement; _sensu_ page 6 of Pyle, P. 1997. Identification guide to North American birds. Part 1, Columbidae to Ploceidae. State Creek Press, Bolinas, CA)
+  21.	`left_wing`: length in millimeters of left wing of captured individual. Measured as the distance from the carpal joint (the bend of the wing) to the longest primary feather whilst flattening the wing and straightening the primaries (also known as the "maximum flat" or "flattened and straightened" measurement; _sensu_ page 6 of Pyle, P. 1997. Identification guide to North American birds. Part 1, Columbidae to Ploceidae. State Creek Press, Bolinas, CA)
   22.	`right_wing`: same as `left_wing` measurement above but for right wing of captured individual
   23.	`blood`: indication if blood from captured individual was collected (1) or not (0)
   24.	`moult`: primary molt score of captured individual. Scored as a the stage of the moult and the number of feathers at that stage. See [Ringers' Manual, British Trust for Ornithology, Thetford](https://www.bto.org/sites/default/files/u17/downloads/about/resources/primary-moult.pdf "Moult Scoring") for more details.
@@ -110,6 +113,7 @@ In this repository you can find all the raw data we have collected from >1,300 i
   <summary>D. <b><code>Resights</code></b> – a table of all resightings of color-marked individuals.</summary>
   
   Columns are defined as:
+  
   1.	`species`: species of plover (all snowy plover in this case)
   2.	`population`: population at which resighting was made (all Ceuta in this case)
   3.	`year`: year during which resighting was made
@@ -133,6 +137,7 @@ In this repository you can find all the raw data we have collected from >1,300 i
   <summary>E. <b><code>BirdRef</code></b> – a table of all families monitored and the identification of their members.</summary>
 
   Columns are defined as:
+  
   1.	`species`: species of plover (all snowy plover in this case)
   2.	`population`: population at which family was observed (all Ceuta in this case)
   3.	`year`: year during which family was observed
