@@ -113,7 +113,7 @@ In this repository you can find all the raw data we have collected from >1,300 i
   16.	`comments`: miscellaneous comments pertinent to the resighting
 
 <details>
-  <summary>E. **`BirdRef`**!</summary>
+  <summary>E. <b>`BirdRef`**</b></summary>
 
   – a table of all families monitored and the identification of their members. Columns are defined as:
   1.	`species`: species of plover (all snowy plover in this case)
@@ -133,3 +133,4 @@ In this repository you can find all the raw data we have collected from >1,300 i
   15.	`type`: indication of type of experiement conducted
   16.	`manip`: date of the experimental manipulation (in mdd format)
   </details>
+  
