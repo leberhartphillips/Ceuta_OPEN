@@ -4,6 +4,8 @@
 
 In this repository you can find all the raw data we have collected from >1,300 individually marked snowy plovers (_Charadrius nivosus_) monitored between 2006 and 2012 at [Bahía de Ceuta](https://www.google.com/maps/@23.9197739,-106.9668912,2358m/data=!3m1!1e3 "Google Map Satellite") – an important breeding site in western Mexico.
 
+[![Ceuta Snowy Plovers](https://img.youtube.com/vi/h4OxHZXADA8/0.jpg)](https://www.youtube.com/watch?v=h4OxHZXADA8)
+
 **`Ceuta_OPEN.sqlite`** contains the SQL (Structured Query Language) database of the following 5 tables:
 
   <details>
