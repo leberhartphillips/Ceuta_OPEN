@@ -114,22 +114,22 @@ In this repository you can find all the raw data we have collected from >1,300 i
   
   Columns are defined as:
   
-  1.	`species`: species of plover (all snowy plover in this case)
-  2.	`population`: population at which resighting was made (all Ceuta in this case)
-  3.	`year`: year during which resighting was made
-  4.	`site`: site at which resighting was made
-  5.	`easting`: UTM easting of observer's location while resighting
-  6.	`northing`: UTM northing of observer's location while resighting
-  7.	`utm`: UTM zone of observer's location while resighting
-  8.	`date`: date resighting was made (mdd format)
-  9.	`time`: time resighting was made (24h format)
-  10.	`distance`: estimated distance in meters between resighted bird and observer
-  11.	`degree`: estimated bearing of resighted bird relative to the observer (i.e., the number of degrees in the angle measured in a clockwise direction from the north line to the line joining the observer to the brood)
-  12.	`code`: color-ring combination of the resighted individual. The scheme can be noted as XX.XX|XX.XX where X indicates a color (or metal) ring, the full stop marks the position of 'knee-joint' and the pipe divides the left and right leg. Thus the readout is "left above . left below | right above . right below". See page 9 of [Székely, Kosztolányi, and Küpper (2008)](https://www.researchgate.net/publication/228494424_Practical_guide_for_investigating_breeding_ecology_of_Kentish_plover_Charadrius_alexandrinus "Practical guide for investigating breeding ecology of Kentish plover Charadrius alexandrinus") for more details.
-  13.	`sex`: sex of the resighted individual
-  14.	`census`: indication if the resighting was conducted as part of a census count (1) or not (0)
-  15.	`observer`: initials of observer making resighting
-  16.	`comments`: miscellaneous comments pertinent to the resighting
+  1.	`species`     species of plover (all snowy plover in this case)
+  2.	`population`  population at which resighting was made (all Ceuta in this case)
+  3.	`year`        year during which resighting was made
+  4.	`site`        site at which resighting was made
+  5.	`easting`     UTM easting of observer's location while resighting
+  6.	`northing`    UTM northing of observer's location while resighting
+  7.	`utm`         UTM zone of observer's location while resighting
+  8.	`date`        date resighting was made (mdd format)
+  9.	`time`        time resighting was made (24h format)
+  10.	`distance`    estimated distance in meters between resighted bird and observer
+  11.	`degree`      estimated bearing of resighted bird relative to the observer (i.e., the number of degrees in the angle measured in a clockwise direction from the north line to the line joining the observer to the brood)
+  12.	`code`        color-ring combination of the resighted individual. The scheme can be noted as XX.XX|XX.XX where X indicates a color (or metal) ring, the full stop marks the position of 'knee-joint' and the pipe divides the left and right leg. Thus the readout is "left above . left below | right above . right below". See page 9 of [Székely, Kosztolányi, and Küpper (2008)](https://www.researchgate.net/publication/228494424_Practical_guide_for_investigating_breeding_ecology_of_Kentish_plover_Charadrius_alexandrinus "Practical guide for investigating breeding ecology of Kentish plover Charadrius alexandrinus") for more details.
+  13.	`sex`         sex of the resighted individual
+  14.	`census`      indication if the resighting was conducted as part of a census count (1) or not (0)
+  15.	`observer`    initials of observer making resighting
+  16.	`comments`    miscellaneous comments pertinent to the resighting
   </details>
   
   
