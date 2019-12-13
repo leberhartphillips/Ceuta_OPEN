@@ -1,10 +1,11 @@
-# Ceuta OPEN
+# CeutaOPEN
 ## An open access database of snowy plover breeding ecology
+### Version 1.0.0 - November 9, 2019
 #### Luke J. Eberhart-Phillips, Medardo Cruz-López, and Clemens Küpper
 
-In this repository you can find all the raw data we have collected from >1,300 individually marked snowy plovers (_Charadrius nivosus_) monitored between 2006 and 2012 at [Bahía de Ceuta](https://www.google.com/maps/@23.9197739,-106.9668912,2358m/data=!3m1!1e3 "Google Map Satellite") – an important breeding site in western Mexico.
+In this repository you can find all the raw data we have collected from 1,598 individually marked snowy plovers (_Charadrius nivosus_) monitored between 2006 and 2016 at [Bahía de Ceuta](https://www.google.com/maps/@23.9197739,-106.9668912,2358m/data=!3m1!1e3 "Google Map Satellite") – an important breeding site in western Mexico.
 
-[**`Ceuta_OPEN.sqlite`**](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/Ceuta_OPEN.sqlite "Ceuta OPEN data") contains the SQL (Structured Query Language) database of the following 5 tables:
+[**`Ceuta_OPEN_v1.sqlite`**](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/Ceuta_OPEN.sqlite "Ceuta OPEN data") contains the SQL (Structured Query Language) database of the following 5 tables (please click the black arrows to see column definitions):
 
   <details>
   <summary>A. <b><code>Nests</code></b> – a table of all nests found and monitored.</summary>
@@ -22,10 +23,10 @@ In this repository you can find all the raw data we have collected from >1,300 i
   9.	`utm`: UTM zone of nest
   10.	`found_date`: date nest was discovered (mdd format)
   11.	`found_time`: time nest was discovered (24h format)
-  12.	`laying_date`: date nest was estimated to have been laid based on egg floatation scores (`float1`, `float2`, and `float3`; defined below)
+  12.	`nest_initiation_date`: estimated date when the first egg of the nest was laid (i.e., its 'initiation'). The estimate is calculated by subtracting the age in days of the oldest egg (determined by the floatation scores`float1`, `float2`, and `float3` defined below) and a 5-day laying period for three-egg clutches or a 3-day laying period for two-egg clutches or a 1-day laying period for one-egg clutches (egg-laying intervals are based on [Page et al. 2009](http://obpa-nc.org/DOI-AdminRecord/0071935-0072002.pdf "Snowy Plover (Charadrius alexandrinus), The Birds of North America Online")). Determining initiation dates of clutches found at stage `F` is imprecise, and thus we estimated the intiation date by subtracting 25 days from the hatch date (i.e., the average length of incubation in this population) and an additional 5, 3, or 1 days for the laying period depending on the clutch size. For nests found at stage `F` that failed before hatching, the nest initiation date is `NA`.
   13.	`end_date`: date nest ended (mdd format; cause specified in `fate`)
   14.	`last_observation_alive`: date nest was last observed active
-  15.	`fate`: fate of nest (e.g., hatched, predated, abandoned, etc.)
+  15.	`fate`: fate of nest (either: Abandoned, Flooded, Hatch, Predated, Unhatched, Other, or Unknown)
   16.	`male`: ring ID of male seen tending nest
   17.	`female`: ring ID of female seen tending nest
   18.	`no_chicks`: number of chicks hatched from nest
@@ -86,27 +87,29 @@ In this repository you can find all the raw data we have collected from >1,300 i
   7.	`ring`: alpha-numeric code of metal ring assigned to captured individual
   8.	`code`: color-ring combination assigned to captured individual. The scheme can be noted as XX.XX|XX.XX where X indicates a color (or metal) ring, the full stop marks the position of 'knee-joint' and the pipe divides the left and right leg. Thus the readout is "left above . left below | right above . right below". See page 9 of [Székely, Kosztolányi, and Küpper (2008)](https://www.researchgate.net/publication/228494424_Practical_guide_for_investigating_breeding_ecology_of_Kentish_plover_Charadrius_alexandrinus "Practical guide for investigating breeding ecology of Kentish plover Charadrius alexandrinus") for more details.
   9.	`age`: age of captured individual (J = juvenile (chicks and first-years), A = adult (second years and older))
-  10.	`sex`: sex of captured individual (F = female, M = males, J = unknown sexed juvenile)
-  11.	`easting`: UTM easting of capture
-  12.	`northing`: UTM northing of capture
-  13.	`utm`: UTM zone of capture
-  14.	`date`: date capture was made (mdd format)
-  15.	`time`: time capture was made (24h format)
-  16.	`parents`: parents attending captured individual (if `age` = "J") at time of observation (0 = no parent present; 1 = one parent (not identified whether male or female); 2 = female only (2+ when female certainly identified, whilst male uncertain); 3 = male only (3+, i.e., opposite of 2+); 4 = both present)
-  17.	`weight`: weight in grams of captured individual
-  18.	`bill`: length in millimeters of upper mandible of captured individual. Measured as the distance between the tip of the forehead feathering at the base of the upper bill, along the ridge of the culmen, and the tip of the bill (also known as the "exposed culmen" measurement; _sensu_ page 8 of Pyle, P. 1997. Identification guide to North American birds. Part 1, Columbidae to Ploceidae. State Creek Press, Bolinas, CA)
-  19.	`left_tarsus`: length in millimeters of left tarsus of captured individual. Measured as the distance between the notch at the end of the lateral condyle of the tibiotarsus on the backside of the leg, to the last tarsal scute on the front of the leg at the base of the foot (also known as the "outside tarsus" or "diagonal tarsus" measurement; _sensu_ page 11 of Pyle, P. 1997. Identification guide to North American birds. Part 1, Columbidae to Ploceidae. State Creek Press, Bolinas, CA)
-  20.	`right_tarsus`: same as `left_tarsus` measurement above but for right leg of captured individual
-  21.	`left_wing`: length in millimeters of left wing of captured individual. Measured as the distance from the carpal joint (the bend of the wing) to the longest primary feather whilst flattening the wing and straightening the primaries (also known as the "maximum flat" or "flattened and straightened" measurement; _sensu_ page 6 of Pyle, P. 1997. Identification guide to North American birds. Part 1, Columbidae to Ploceidae. State Creek Press, Bolinas, CA)
-  22.	`right_wing`: same as `left_wing` measurement above but for right wing of captured individual
-  23.	`blood`: indication if blood from captured individual was collected (1) or not (0)
-  24.	`moult`: primary molt score of captured individual. Scored as a the stage of the moult and the number of feathers at that stage. See [Ringers' Manual, British Trust for Ornithology, Thetford](https://www.bto.org/sites/default/files/u17/downloads/about/resources/primary-moult.pdf "Moult Scoring") for more details.
-  25.	`fat`: fat score of captured individual, scored as the amount of visible fat in the furcular region or tracheal pit. See [Ringers' Manual, British Trust for Ornithology, Thetford](https://www.bto.org/sites/default/files/u17/downloads/about/resources/Fat%20score.pdf "Fat Scores") for more details.
-  26.	`lice`: indication if feather lice from captured individual were collected (1) or not (0)
-  27.	`fecal`: indication if faeces from captured individual was collected (1) or not (0)
-  28.	`photo`: indication if a photo of captured individual was taken (1) or not (0)
-  29.	`observer`: initials of observer making capture
-  30.	`comments`: miscellaneous comments pertinent to capture event
+  10. `field_sex`: sex of individual determined in the field based on ornamentation and other clues (e.g., time of capture, parental care, etc.), where F = female, M = males, and J = unknown sexed juvenile.
+  11. `mol_sex`: sex of individual determined in the lab with the P2/P8 and Calex-31 markers (for our PCR conditions see [dos Remedios et al. (2015)](https://onlinelibrary.wiley.com/doi/full/10.1111/ibi.12263 "Ontogenic differences in sexual size dimorphism across four plover populations")), where F = female, M = males, U = insufficient molecular evidence (e.g., markers failed), and NA = individual not molecularly sex-typed. Note: All birds initially captured in years after 2013 have not yet been molecularly sex-typed.
+  12.	`sex`: sex of captured individual (F = female, M = males, J = unknown sexed juvenile)
+  13.	`easting`: UTM easting of capture
+  14.	`northing`: UTM northing of capture
+  15.	`utm`: UTM zone of capture
+  16.	`date`: date capture was made (mdd format)
+  17.	`time`: time capture was made (24h format)
+  18.	`parents`: parents attending captured individual (if `age` = "J") at time of observation (0 = no parent present; 1 = one parent (not identified whether male or female); 2 = female only (2+ when female certainly identified, whilst male uncertain); 3 = male only (3+, i.e., opposite of 2+); 4 = both present)
+  19.	`weight`: weight in grams of captured individual
+  20.	`bill`: length in millimeters of upper mandible of captured individual. Measured as the distance between the tip of the forehead feathering at the base of the upper bill, along the ridge of the culmen, and the tip of the bill (also known as the "exposed culmen" measurement; _sensu_ page 8 of Pyle, P. 1997. Identification guide to North American birds. Part 1, Columbidae to Ploceidae. State Creek Press, Bolinas, CA)
+  21.	`left_tarsus`: length in millimeters of left tarsus of captured individual. Measured as the distance between the notch at the end of the lateral condyle of the tibiotarsus on the backside of the leg, to the last tarsal scute on the front of the leg at the base of the foot (also known as the "outside tarsus" or "diagonal tarsus" measurement; _sensu_ page 11 of Pyle, P. 1997. Identification guide to North American birds. Part 1, Columbidae to Ploceidae. State Creek Press, Bolinas, CA)
+  22.	`right_tarsus`: same as `left_tarsus` measurement above but for right leg of captured individual
+  23.	`left_wing`: length in millimeters of left wing of captured individual. Measured as the distance from the carpal joint (the bend of the wing) to the longest primary feather whilst flattening the wing and straightening the primaries (also known as the "maximum flat" or "flattened and straightened" measurement; _sensu_ page 6 of Pyle, P. 1997. Identification guide to North American birds. Part 1, Columbidae to Ploceidae. State Creek Press, Bolinas, CA)
+  24.	`right_wing`: same as `left_wing` measurement above but for right wing of captured individual
+  25.	`blood`: indication if blood from captured individual was collected (1) or not (0)
+  26.	`moult`: primary molt score of captured individual. Scored as a the stage of the moult and the number of feathers at that stage. See [Ringers' Manual, British Trust for Ornithology, Thetford](https://www.bto.org/sites/default/files/u17/downloads/about/resources/primary-moult.pdf "Moult Scoring") for more details.
+  27.	`fat`: fat score of captured individual, scored as the amount of visible fat in the furcular region or tracheal pit. See [Ringers' Manual, British Trust for Ornithology, Thetford](https://www.bto.org/sites/default/files/u17/downloads/about/resources/Fat%20score.pdf "Fat Scores") for more details.
+  28.	`lice`: indication if feather lice from captured individual were collected (1) or not (0)
+  29.	`fecal`: indication if faeces from captured individual was collected (1) or not (0)
+  30.	`photo`: indication if a photo of captured individual was taken (1) or not (0)
+  31.	`observer`: initials of observer making capture
+  32.	`comments`: miscellaneous comments pertinent to capture event
   </details>
 
   <details>
@@ -143,8 +146,8 @@ In this repository you can find all the raw data we have collected from >1,300 i
   4.	`site`: site at which family was observed
   5.	`family`: unique identified of family (unique within year and within site). Families found as a nests retain `nest` ID found in **`Nests`** table, whereas families found as broods hatching from unknown nests have a negative `brood` ID (e.g., `-2`) found in **`Broods`** table)
   6.	`ID`: a concatenation of `year`, `site`, and `nest` to make a unique value across all sites and years
-  7.	`laying_date`: date nest was estimated to have been laid based on egg floatation scores (`float1`, `float2`, and `float3`)
-  8.	`hatching_date`: date nest hatched (mdd format; "NA" if nest `fate` was other than "HATCH" in **`Nests`** table)
+  7.	`nest_initiation_date`: estimated date when the first egg of the nest was laid (i.e., its 'initiation'). The estimate is calculated by subtracting the age in days of the oldest egg (determined by the floatation scores`float1`, `float2`, and `float3` defined above in the `Nests` table) and a 5-day laying period for three-egg clutches or a 3-day laying period for two-egg clutches or a 1-day laying period for one-egg clutches (egg-laying intervals are based on [Page et al. 2009](http://obpa-nc.org/DOI-AdminRecord/0071935-0072002.pdf "Snowy Plover (Charadrius alexandrinus), The Birds of North America Online")). Determining initiation dates of clutches found at stage `F` is imprecise, and thus we estimated the intiation date by subtracting 25 days from the hatch date (i.e., the average length of incubation in this population) and an additional 5, 3, or 1 days for the laying period depending on the clutch size. For nests found at stage `F` that failed before hatching, the nest initiation date is `NA`.
+  8.	`hatching_date`: date nest hatched (mdd format; "NA" if nest `fate` was other than "Hatch" in **`Nests`** table)
   9.	`male`: ring ID of male parent observed with nest/brood
   10.	`female`: ring ID of female parent observed with nest/brood
   11.	`chick1`: ring ID of first chick seen in brood
