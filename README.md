@@ -1,7 +1,7 @@
 # CeutaOPEN
 ## An open access database of snowy plover breeding ecology
-### Version 1.0.0 - November 9, 2019
-#### Luke J. Eberhart-Phillips, Medardo Cruz-López, and Clemens Küpper
+### Version 1.0.0 - December 13, 2019
+#### Luke J. Eberhart-Phillips, Medardo Cruz-López, Lydia Lozano-Angulo, Salvador Gómez del Ángel, Wendoly Rojas-Abreu, and Clemens Küpper
 
 In this repository you can find all the raw data we have collected from 1,598 individually marked snowy plovers (_Charadrius nivosus_) monitored between 2006 and 2016 at [Bahía de Ceuta](https://www.google.com/maps/@23.9197739,-106.9668912,2358m/data=!3m1!1e3 "Google Map Satellite") – an important breeding site in western Mexico.
 
@@ -21,8 +21,8 @@ In this repository you can find all the raw data we have collected from 1,598 in
   7.	`easting`: UTM easting of nest
   8.	`northing`: UTM northing of nest
   9.	`utm`: UTM zone of nest
-  10.	`found_date`: date nest was discovered (mdd format)
-  11.	`found_time`: time nest was discovered (24h format)
+  10.	`found_date`: date nest was discovered (in %Y-%m-%d POSIX format, e.g., 2008-05-14)
+  11.	`found_time`: time nest was discovered (24h format, e.g., 1633)
   12.	`nest_initiation_date`: estimated date when the first egg of the nest was laid (i.e., its 'initiation'). The estimate is calculated by subtracting the age in days of the oldest egg (determined by the floatation scores`float1`, `float2`, and `float3` defined below) and a 5-day laying period for three-egg clutches or a 3-day laying period for two-egg clutches or a 1-day laying period for one-egg clutches (egg-laying intervals are based on [Page et al. 2009](http://obpa-nc.org/DOI-AdminRecord/0071935-0072002.pdf "Snowy Plover (Charadrius alexandrinus), The Birds of North America Online")). Determining initiation dates of clutches found at stage `F` is imprecise, and thus we estimated the intiation date by subtracting 25 days from the hatch date (i.e., the average length of incubation in this population) and an additional 5, 3, or 1 days for the laying period depending on the clutch size. For nests found at stage `F` that failed before hatching, the nest initiation date is `NA`.
   13.	`end_date`: date nest ended (mdd format; cause specified in `fate`)
   14.	`last_observation_alive`: date nest was last observed active
@@ -59,8 +59,8 @@ In this repository you can find all the raw data we have collected from 1,598 in
   7.	`easting`: UTM easting of brood observation
   8.	`northing`: UTM northing of brood observation
   9.	`utm`: UTM zone of brood observation
-  10.	`date`: date brood observation was made (mdd format)
-  11.	`time`: time brood observation was made (24h format)
+  10.	`date`: date brood observation was made (%Y-%m-%d POSIX format, e.g., 2008-05-14)
+  11.	`time`: time brood observation was made (24h format, e.g., 1633)
   12.	`distance`: estimated distance in meters between brood and observer
   13.	`degree`: estimated bearing of brood relative to observer (i.e., the number of degrees in the angle measured in a clockwise direction from the north line to the line joining the observer to the brood)
   14.	`parents`: parents attending brood at time of observation (0 = no parent present; 1 = one parent (not identified whether male or female); 2 = female only (2+ when female certainly identified, whilst male uncertain); 3 = male only (3+, i.e., opposite of 2+); 4 = both present)
@@ -93,8 +93,8 @@ In this repository you can find all the raw data we have collected from 1,598 in
   13.	`easting`: UTM easting of capture
   14.	`northing`: UTM northing of capture
   15.	`utm`: UTM zone of capture
-  16.	`date`: date capture was made (mdd format)
-  17.	`time`: time capture was made (24h format)
+  16.	`date`: date capture was made (%Y-%m-%d POSIX format, e.g., 2008-05-14)
+  17.	`time`: time capture was made (24h format, e.g., 1633)
   18.	`parents`: parents attending captured individual (if `age` = "J") at time of observation (0 = no parent present; 1 = one parent (not identified whether male or female); 2 = female only (2+ when female certainly identified, whilst male uncertain); 3 = male only (3+, i.e., opposite of 2+); 4 = both present)
   19.	`weight`: weight in grams of captured individual
   20.	`bill`: length in millimeters of upper mandible of captured individual. Measured as the distance between the tip of the forehead feathering at the base of the upper bill, along the ridge of the culmen, and the tip of the bill (also known as the "exposed culmen" measurement; _sensu_ page 8 of Pyle, P. 1997. Identification guide to North American birds. Part 1, Columbidae to Ploceidae. State Creek Press, Bolinas, CA)
@@ -124,8 +124,8 @@ In this repository you can find all the raw data we have collected from 1,598 in
   5.	`easting`: UTM easting of observer's location while resighting
   6.	`northing`: UTM northing of observer's location while resighting
   7.	`utm`: UTM zone of observer's location while resighting
-  8.	`date`: date resighting was made (mdd format)
-  9.	`time`: time resighting was made (24h format)
+  8.	`date`: date resighting was made (%Y-%m-%d POSIX format, e.g., 2008-05-14)
+  9.	`time`: time resighting was made (24h format, e.g., 1633)
   10.	`distance`: estimated distance in meters between resighted bird and observer
   11.	`degree`: estimated bearing of resighted bird relative to the observer (i.e., the number of degrees in the angle measured in a clockwise direction from the north line to the line joining the observer to the brood)
   12.	`code`: color-ring combination of the resighted individual. The scheme can be noted as XX.XX|XX.XX where X indicates a color (or metal) ring, the full stop marks the position of 'knee-joint' and the pipe divides the left and right leg. Thus the readout is "left above . left below | right above . right below". See page 9 of [Székely, Kosztolányi, and Küpper (2008)](https://www.researchgate.net/publication/228494424_Practical_guide_for_investigating_breeding_ecology_of_Kentish_plover_Charadrius_alexandrinus "Practical guide for investigating breeding ecology of Kentish plover Charadrius alexandrinus") for more details.
@@ -155,7 +155,7 @@ In this repository you can find all the raw data we have collected from 1,598 in
   13.	`chick3`: ring ID of third chick seen in brood
   14.	`exp`: indication if family was part of an experiment
   15.	`type`: indication of type of experiement conducted
-  16.	`manip`: date of the experimental manipulation (in mdd format)
+  16.	`manip`: date of the experimental manipulation (in %Y-%m-%d POSIX format, e.g., 2008-05-14)
   </details>
   
 [![Ceuta Snowy Plovers](https://lukeeberhartphillips.files.wordpress.com/2019/03/ceuta_open_logo_cut-1.png)](https://www.youtube.com/watch?v=h4OxHZXADA8)
