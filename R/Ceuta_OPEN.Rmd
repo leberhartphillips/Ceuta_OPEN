@@ -1,0 +1,1297 @@
+---
+title: "CeutaOPEN"
+author: |
+  | Luke J. Eberhart-Phillips, Medardo Cruz-López, Clemens Küpper
+  | *Max Planck Institute for Ornithology, Seewiesen, Germany*
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+always_allow_html: yes
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
+
+In this R Markdown document we provide a simple workflow in R to introduce users to the Ceuta OPEN database presented in our paper. In short, the database contains all of our raw field data collected from >1,300 individually marked snowy plovers (_Charadrius nivosus_) monitored between 2006 and 2016 at [Bahía de Ceuta](https://www.google.com/maps/@23.9197739,-106.9668912,2358m/data=!3m1!1e3 "Google Map Satellite") – an important breeding site in western Mexico. To access the database and this accompanying R Markdown code, please visit this [GitHub](https://github.com/leberhartphillips/Ceuta_OPEN) repository. An explanation of the datatables in the repository can be found in the **`README.md`** file. Please don't hesitate to contact Luke at `luke.eberhart[at]orn.mpg.de` if you have any questions.
+
+## Prerequisites
+
+* To utilize this R Markdown code you need a `data` subfolder containing the **`Ceuta_OPEN.sqlite`** database downloaded from the [GitHub](https://github.com/leberhartphillips/Ceuta_OPEN) repository:
+```{r data download, eval=FALSE}
+dir.create("data", showWarnings = FALSE)
+download.file(url = "https://github.com/leberhartphillips/Ceuta_OPEN/raw/master/Ceuta_OPEN.sqlite",
+              destfile = "data/Ceuta_OPEN.sqlite", mode = "wb")
+```
+
+* The following packages are needed to employ this R Markdown document and can be easily installed from [CRAN](http://cran.r-project.org/) by uncommenting the `install.packages` function below:
+```{r libraries, message=FALSE}
+# install.packages(c("RSQLite", "dplyr", "dbplyr", "knitr", "stringr", "sp", "rgdal", 
+#                    "mapview", "RColorBrewer", "webshot", "leaflet", "ggplot2",
+#                    "kableExtra", "plotly", "bamlss", "gridExtra"))
+library(RSQLite)
+library(dplyr)
+library(dbplyr)
+library(knitr)
+library(stringr)
+library(sp)
+library(rgdal)
+library(mapview)
+library(RColorBrewer)
+library(webshot)
+library(leaflet)
+library(ggplot2)
+library(kableExtra)
+library(plotly)
+# webshot::install_phantomjs()
+```
+
+```{r functions, include=FALSE}
+as.Date.multicol <- function(df){
+  if(sum(grepl(paste(c("date", "alive"), collapse = "|"), names(df))) > 1){
+    
+    df[, which(grepl(paste(c("date", "alive"), collapse = "|"), names(df)))] <-
+      lapply(df[, which(grepl(paste(c("date", "alive"), collapse = "|"), names(df)))],
+             function(x) as.Date(x, origin = "1970-01-01"))
+    
+  }
+  else{
+    
+    df[, which(grepl(paste(c("date", "alive"), collapse = "|"), names(df)))] <- 
+      as.Date(df[, which(grepl(paste(c("date", "alive"), collapse = "|"), 
+                               names(df)))], 
+              origin = "1970-01-01")
+    
+  }
+  
+  return(df)
+}
+```
+
+## Data Accessibility
+Our database is stored as an SQLite to make it convenient for users to utilize across a variety of platforms. Here we demonstrate how to employ R to access and explore the structure of the database using the 'RSQLite' package.
+
+Connect to the **`Ceuta_OPEN`** database
+```{r data import}
+Ceuta_OPEN <- RSQLite::dbConnect(SQLite(), dbname="data/Ceuta_OPEN_version_releases/Ceuta_OPEN_v1.sqlite")
+```
+Our database includes five tables that encompass all of our field observations. Our field methods for obtaining the data presented in these tables is described in the *Methods* section of our paper.
+
+List the tables in the database
+```{r database structure}
+RSQLite::dbListTables(Ceuta_OPEN)
+```
+
+Show the columns in the **`Nests`** table, for example
+```{r table structure, echo=TRUE}
+dbListFields(Ceuta_OPEN, "Nests")
+```
+
+## Making Data Queries
+To make database queries, you can use Structured Query Language (SQL) syntax or dplyr syntax. Here we demonstrate how to make a query using both methods, however in subsequent sections of this tutorial we solely employ dplyr as it arguably uses more intuitive syntax for those familiar with the R language.
+
+#### Example 1. *Extract all nests monitored in 2012*
+##### *SQL syntax:*  
+(note that 'limit 10' is used here to display only the first 10 observations of the query)
+```{r query example 1 SQL}
+kable(dbGetQuery(Ceuta_OPEN, "SELECT * 
+                              FROM Nests 
+                              WHERE year='2012' 
+                              LIMIT 10")) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
+##### *dplyr syntax:*
+```{r query example 1 dplyr}
+dbReadTable(Ceuta_OPEN, "Nests") %>%
+  filter(year == 2012) %>%
+  head(10) %>%
+  kable() %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
+#### Example 2. *List the years and weights from all captures of the bird with the colour-ring combination "BX.MX|RX.RX"*
+##### *SQL syntax:*
+```{r query example 2 SQL}
+dbGetQuery(Ceuta_OPEN, "SELECT code, year, weight 
+                        FROM Captures 
+                        WHERE code = 'BX.MX|RX.RX'") %>%
+  kable(col.names = c("Colour combination",
+                      "Year",
+                      "Body mass (g)")) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
+##### *dplyr syntax:*
+```{r query example 2 dplyr}
+dbReadTable(Ceuta_OPEN, "Captures") %>%
+  filter(code == "BX.MX|RX.RX") %>%
+  select(code, year, weight) %>%
+  collect() %>%
+  kable(col.names = c("Colour combination",
+                      "Year",
+                      "Body mass (g)")) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
+#### Example 3. *Find the top 6 males that have had the most hatched nests over the study period*
+##### *SQL syntax:*
+```{r query example 3 SQL}
+dbGetQuery(Ceuta_OPEN, "SELECT ring, count(*) as count
+                        FROM Nests a
+                        JOIN Captures b
+                        ON a.ID = b.ID
+                        AND a.fate = 'Hatch'
+                        AND b.sex = 'M'
+                        GROUP BY b.ring
+                        ORDER BY count(*) DESC
+                        LIMIT 6") %>%
+  kable(col.names = c("Ring number",
+                      "Number of hatched nests")) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+##### *dplyr syntax:*
+```{r query example 3 dplyr, message=FALSE}
+left_join(x = dbReadTable(Ceuta_OPEN, "Nests"), 
+          y = dbReadTable(Ceuta_OPEN, "Captures"), 
+          by = "ID") %>%
+  filter(sex == "M" & fate == "Hatch") %>%
+  group_by(ring) %>%
+  tally(sort = TRUE) %>%
+  top_n(6) %>%
+  collect() %>%
+  kable(col.names = c("Ring number",
+                      "Number of hatched nests")) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
+```{r set plotting theme, include=FALSE}
+# define the plotting theme to be used in subsequent ggplots
+luke_theme <- 
+  theme_bw() +
+  theme(
+    text = element_text(family = "Franklin Gothic Book"),
+    legend.title = element_text(size = 16),
+    legend.text = element_text(size = 12),
+    axis.title.x = element_blank(),
+    axis.text.x  = element_text(size = 12, angle = 45, vjust = 1, hjust = 1), 
+    axis.title.y = element_text(size = 16),
+    axis.text.y = element_text(size = 12),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.ticks = element_line(size = 0.5, colour = "grey40"),
+    axis.ticks.length = unit(0.2, "cm"),
+    panel.border = element_rect(linetype = "solid", colour = "grey")
+  )
+
+# set plotting colour palettes
+plot_palette_sex <- RColorBrewer::brewer.pal(8, "Dark2")[c(2,1,8)]
+plot_palette_brood <- RColorBrewer::brewer.pal(7, "Blues")[c(3:7)]
+
+# set the ggplotting theme
+theme_set(luke_theme)
+```
+
+## Database Summary
+Here we summarise some of the key components from each table in the database.
+
+### Nests datatable
+##### *Number of nests monitored*
+```{r}
+dbReadTable(Ceuta_OPEN, "Nests") %>%
+  summarise(n_nests = n_distinct(ID)) %>%
+  kable(col.names = c("Number of nests monitored")) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
+##### *Map of all nests in the study area, coloured by year*
+```{r results='asis', fig.height=6, fig.width=9}
+# Extract the Nests datatable
+Nests <- dbReadTable(Ceuta_OPEN, "Nests")
+
+# Classify the 'easting' and 'northing' columns as numeric
+Nests[,c("easting", "northing")] <- 
+  lapply(Nests[,c("easting", "northing")], as.numeric)
+
+# Remove nests without spatial coordinates
+Nests <- filter(Nests, !is.na(easting))
+
+# Set the UTM 1983 zone 13 North (format nest data is in)
+UTM13n <- CRS("+proj=utm +zone=13 +ellps=WGS84 +datum=WGS84 +units=m +no_defs")
+
+# Set the World Geographic System 1984 (lat/long, i.e., format for mapping)
+WGS84 <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84") 
+
+# Create a spatialpointsdataframe while specifying the coordinates
+Nests_spat_UTM <-  
+  SpatialPointsDataFrame(coords = Nests[,c("easting", "northing")],
+                         data = Nests, 
+                         proj4string = UTM13n)
+
+# transform the UTM coordinates to lat/long for mapping
+Nests_spat_WGS84 <- spTransform(Nests_spat_UTM, WGS84)
+
+# specify mapview options for viewing
+mapviewOptions(basemaps = c("Esri.WorldImagery"),
+               layers.control.pos = "topright",
+               legend.pos = "bottomleft")
+
+# open mapview leaflet of the spatial extent of the Nests data (Note: this is best viewed in an HTML version of this R Markdown document)
+nest_map <- 
+  mapview(Nests_spat_WGS84, zcol = "year", 
+          col.regions = colorRampPalette(brewer.pal(9, "Blues")),
+          layer.name = "Snowy Plover Nests",
+          layers.control.pos = "topright")
+
+mean_coords <- c(mean(coordinates(Nests_spat_WGS84)[, 1]-.02),
+               mean(coordinates(Nests_spat_WGS84)[, 2]))
+
+nest_map@map %>% setView(mean_coords[1], mean_coords[2], zoom = 14)
+```
+
+##### *Annual variation in nesting activity and fates*
+```{r, message=FALSE, fig.height=6, fig.width=6, fig.align='center'}
+dbReadTable(Ceuta_OPEN, "Nests") %>% 
+  group_by(year, fate) %>%
+  dplyr::summarise(n_nests = dplyr::n()) %>% 
+  mutate(fate = factor(fate, levels = c("Hatch", "Predated", "Flooded", 
+                                        "Abandoned", "Unhatched", "Other", 
+                                        "Unknown"))) %>% 
+  ggplot(aes(y = n_nests, x = year, fill = fate, color = fate)) +
+  geom_bar(stat = "identity") +
+  scale_color_brewer(palette = "Set2",
+                     name = "Nest fate") +
+  scale_fill_brewer(palette = "Set2",
+                    name = "Nest fate") +
+  ylab("Nests monitored")
+```
+
+##### *Check the distribution of egg morphometrics*
+```{r, echo=FALSE}
+# interactive plotly visualisation of egg morphometrics
+egg_plot <- function(df, species_name = "SNPL")
+{
+  df1 <- filter(df, 
+                species == species_name & 
+                  !is.na(length1) & 
+                  !is.na(width1))
+  df2 <- filter(df, 
+                species == species_name & 
+                  !is.na(length2) & 
+                  !is.na(width2))
+  df3 <- filter(df, 
+                species == species_name & 
+                  !is.na(length3) & 
+                  !is.na(width3))
+  e1 <- list(
+    text = "Egg 1",
+    font = list(size = 14),
+    xref = "paper",
+    yref = "paper",
+    yanchor = "bottom",
+    xanchor = "center",
+    align = "center",
+    x = 0.5,
+    y = 1,
+    showarrow = FALSE
+  )
+  
+  e2 <- list(
+    text = "Egg 2",
+    font = list(size = 14),
+    xref = "paper",
+    yref = "paper",
+    yanchor = "bottom",
+    xanchor = "center",
+    align = "center",
+    x = 0.5,
+    y = 1,
+    showarrow = FALSE
+  )
+  
+  e3 <- list(
+    text = "Egg 3",
+    font = list(size = 14),
+    xref = "paper",
+    yref = "paper",
+    yanchor = "bottom",
+    xanchor = "center",
+    align = "center",
+    x = 0.5,
+    y = 1,
+    showarrow = FALSE
+  )
+  
+  egg1_plot <- 
+    plot_ly(df1, x = ~as.numeric(length1), y = ~as.numeric(width1), type = "scatter", 
+          mode = 'markers', marker = list(opacity = 0.5), 
+          text = ~paste('Nest: ', ID,
+                        '</br> Date: ', found_date)) %>%
+    layout(annotations = e1, xaxis = list(title = "Length"))
+  
+  egg2_plot <- 
+    plot_ly(df1, x = ~as.numeric(length2), y = ~as.numeric(width2), type = "scatter", 
+            mode = 'markers', marker = list(opacity = 0.5), 
+            text = ~paste('Nest: ', ID,
+                          '</br> Date: ', found_date)) %>%
+    layout(annotations = e2, xaxis = list(title = "Length"))
+  
+  egg3_plot <- 
+    plot_ly(df1, x = ~as.numeric(length3), y = ~as.numeric(width3), type = "scatter", 
+            mode = 'markers', marker = list(opacity = 0.5), 
+            text = ~paste('Nest: ', ID,
+                          '</br> Date: ', found_date)) %>%
+    layout(annotations = e3, xaxis = list(title = "Length"))
+    
+  subplot(egg1_plot, egg2_plot, egg3_plot, shareX = TRUE, shareY = TRUE, titleX = TRUE) %>%
+    layout(title = paste(ifelse(species_name == "SNPL", "Snowy Plover",
+                                ifelse(species_name == "WIPL", "Wilson's Plover",
+                                       ifelse(species_name == "KILL", "Killdeer", species_name))), 
+                         "Eggs", sep = " "),
+           yaxis = list(title = "Width"),
+           showlegend = FALSE,
+           margin = list(t=50))
+}
+```
+```{r, message=FALSE, warning=FALSE}
+egg_plot(dbReadTable(Ceuta_OPEN, "Nests"), species_name = "SNPL")
+```
+
+### Captures datatable
+##### *Number of captures for males, females, and chicks*
+```{r}
+dbReadTable(Ceuta_OPEN, "Captures") %>%
+  group_by(sex, age) %>%
+  dplyr::summarise(n_captures = dplyr::n()) %>%
+  kable(col.names = c("Sex", "Age group", "Number of captures")) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
+##### *Number of unique individuals in marked population*
+```{r}
+dbReadTable(Ceuta_OPEN, "Captures") %>%
+  dplyr::summarise(n_marked_individuals = n_distinct(ring)) %>%
+  kable(col.names = c("Number of individuals ringed")) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
+##### *Number of unique individual males, females, and juveniles ringed*
+```{r}
+dbReadTable(Ceuta_OPEN, "Captures") %>%
+  filter(year != 2017 & year != 2018 & year != 2019) %>%
+  group_by(sex, age) %>%
+  summarise(n_individuals = n_distinct(ring)) %>%
+  kable(col.names = c("Sex", "Age group", "Number of captures")) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
+##### *Annual variation in captures*
+```{r, fig.height=6, fig.width=6, fig.align='center'}
+annual_captures <- 
+  dbReadTable(Ceuta_OPEN, "Captures") %>%
+  group_by(year, sex) %>%
+  dplyr::summarise(n_capts = dplyr::n_distinct(ring),
+            total_capts = dplyr::n()) %>%
+  ungroup() %>%
+  mutate(n_capts = as.numeric(n_capts),
+         year = as.numeric(year),
+         sex = factor(sex, levels = c("F", "M", "U"))) %>%
+  collect()
+
+ggplot2::ggplot(data = annual_captures, aes(y = n_capts, x = year, color = sex, fill = sex)) +
+  geom_bar(stat = "identity", alpha = 0.7) +
+  scale_color_manual(values = plot_palette_sex,
+                     name = "Age and sex",
+                     breaks = c("F", "M", "U"),
+                     labels = c("Adult females", "Adult males", "Juveniles")) +
+  scale_fill_manual(values = plot_palette_sex,
+                    name = "Age and sex",
+                    breaks = c("F", "M", "U"),
+                    labels = c("Adult females", "Adult males", "Juveniles")) +
+  ylab("Individuals captured") +
+  scale_x_continuous(labels = as.character(annual_captures$year), 
+                     breaks = annual_captures$year)
+```
+
+##### *Check the distribution of body measurments*
+```{r, include=FALSE, fig.height=8, fig.width=6, fig.align='center'}
+tarsus_plot <- function(df, species_name = "SNPL")
+{
+  dfA <- 
+    df %>% 
+    filter(species == species_name & 
+           age == "A" & 
+           !is.na(right_tarsus) & 
+           !is.na(left_tarsus)) %>% 
+    mutate(right_tarsus = as.numeric(right_tarsus),
+           left_tarsus = as.numeric(left_tarsus))
+    
+  
+  dfJ <- 
+    df %>% 
+    filter(species == species_name & 
+           age == "J" & 
+           !is.na(right_tarsus) & 
+           !is.na(left_tarsus)) %>% 
+    mutate(right_tarsus = as.numeric(right_tarsus),
+           left_tarsus = as.numeric(left_tarsus))
+  
+  A_title <- list(
+    text = "Adults",
+    font = list(size = 14),
+    xref = "paper",
+    yref = "paper",
+    yanchor = "bottom",
+    xanchor = "center",
+    align = "center",
+    x = 0.5,
+    y = 1,
+    showarrow = FALSE
+  )
+  
+  J_title <- list(
+    text = "Juveniles",
+    font = list(size = 14),
+    xref = "paper",
+    yref = "paper",
+    yanchor = "bottom",
+    xanchor = "center",
+    align = "center",
+    x = 0.5,
+    y = 1,
+    showarrow = FALSE
+  )
+  
+  adult_plot <- 
+    plot_ly(dfA, x = ~right_tarsus, y = ~left_tarsus, type = "scatter", 
+            mode = 'markers', marker = list(opacity = 0.5), 
+            text = ~paste('Ring: ', ring,
+                          '</br> Year: ', year,
+                          '</br> Date: ', date,
+                          '</br> Sex: ', sex,
+                          '</br> Species: ', species)) %>%
+    layout(annotations = A_title, xaxis = list(title = "Left (mm)"),
+           shapes = list(
+             type = "line",
+             line = list(color = "black"),
+             x0 = min(min(dfA$right_tarsus), min(dfA$left_tarsus)), 
+             x1 = max(max(dfA$right_tarsus), max(dfA$left_tarsus)),
+             y0 = min(min(dfA$right_tarsus), min(dfA$left_tarsus)), 
+             y1 = max(max(dfA$right_tarsus), max(dfA$left_tarsus))
+           ))
+  
+  juvenile_plot <- 
+    plot_ly(dfJ, x = ~right_tarsus, y = ~left_tarsus, type = "scatter", 
+            mode = 'markers', marker = list(opacity = 0.5), 
+            text = ~paste('Ring: ', ring,
+                          '</br> Year: ', year,
+                          '</br> Date: ', date,
+                          '</br> Sex: ', sex,
+                          '</br> Species: ', species)) %>%
+    layout(annotations = J_title, xaxis = list(title = "Left (mm)"),
+           shapes = list(
+             type = "line",
+             line = list(color = "black"),
+             x0 = min(min(dfJ$right_tarsus), min(dfJ$left_tarsus)), 
+             x1 = max(max(dfJ$right_tarsus), max(dfJ$left_tarsus)),
+             y0 = min(min(dfJ$right_tarsus), min(dfJ$left_tarsus)), 
+             y1 = max(max(dfJ$right_tarsus), max(dfJ$left_tarsus))
+           ))
+  
+  subplot(adult_plot, juvenile_plot, shareX = TRUE, shareY = TRUE, titleX = TRUE) %>%
+    layout(title = paste(ifelse(species_name == "SNPL", "Snowy Plover",
+                                ifelse(species_name == "WIPL", "Wilson's Plover",
+                                       ifelse(species_name == "KILL", "Killdeer", species_name))), 
+                         "Tarsi", sep = " "),
+           yaxis = list(title = "Right (mm)"),
+           showlegend = FALSE,
+           margin = list(t = 50))
+}
+bill_plot <- function(df, species_name = "SNPL")
+{
+  dfA <- 
+    df %>% 
+    filter(species == species_name & 
+           age == "A" & 
+           !is.na(bill)) %>% 
+    mutate(bill = as.numeric(bill))
+  
+  dfJ <- 
+    df %>% 
+    filter(species == species_name & 
+           age == "J" & 
+           !is.na(bill)) %>% 
+    mutate(bill = as.numeric(bill))
+  
+  A_title <- list(
+    text = "Adults",
+    font = list(size = 14),
+    xref = "paper",
+    yref = "paper",
+    yanchor = "bottom",
+    xanchor = "center",
+    align = "center",
+    x = 0.5,
+    y = 1,
+    showarrow = FALSE
+  )
+  
+  J_title <- list(
+    text = "Juveniles",
+    font = list(size = 14),
+    xref = "paper",
+    yref = "paper",
+    yanchor = "bottom",
+    xanchor = "center",
+    align = "center",
+    x = 0.5,
+    y = 1,
+    showarrow = FALSE
+  )
+  
+  adult_hist <- 
+    plot_ly(dfA, y = ~bill, type = "histogram", opacity = 0.75) %>%
+    layout(xaxis = list(title = "Frequency"), yaxis = list(title = "bill"))
+  
+  adult_boxplot <-
+    plot_ly(dfA, y = ~bill, type = "box", marker = list(opacity = 0.5),
+            boxpoints = "outliers", jitter = 0.5,
+            pointpos = 0,
+            text = ~paste('Ring: ', ring,
+                          '</br> Year: ', year,
+                          '</br> Date: ', date)) %>%
+    layout(xaxis = list(showticklabels = FALSE))
+  
+  adult_subplot <- subplot(adult_hist, adult_boxplot, shareY = TRUE) %>%
+    layout(annotations = A_title,
+           xaxis = list(title = "Frequency"),
+           yaxis = list(title = "Bill (mm)"),
+           showlegend = FALSE)
+  
+  juvenile_hist <- 
+    plot_ly(dfJ, y = ~bill, type = "histogram", opacity = 0.75) %>%
+    layout(xaxis = list(title = "Frequency"), yaxis = list(title = "bill"))
+  
+  juvenile_boxplot <-
+    plot_ly(dfJ, y = ~bill, type = "box", marker = list(opacity = 0.5),
+            boxpoints = "outliers", jitter = 0.5,
+            pointpos = 0,
+            text = ~paste('Ring: ', ring,
+                          '</br> Year: ', year,
+                          '</br> Date: ', date)) %>%
+    layout(xaxis = list(showticklabels = FALSE))
+  
+  juvenile_subplot <- subplot(juvenile_hist, juvenile_boxplot, shareY = TRUE) %>%
+    layout(annotations = J_title,
+           xaxis = list(title = "Frequency"),
+           yaxis = list(title = "Bill (mm)"),
+           showlegend = FALSE)
+  
+  subplot(adult_subplot, juvenile_subplot) %>%
+    layout(title = paste(ifelse(species_name == "SNPL", "Snowy Plover",
+                                ifelse(species_name == "WIPL", "Wilson's Plover",
+                                       ifelse(species_name == "KILL", "Killdeer", species_name))), 
+                         "Bill", sep = " "),
+           yaxis = list(title = "Bill (mm)"),
+           xaxis = list(title = "Frequency"),
+           showlegend = FALSE,
+           margin = list(t = 50))
+}
+weight_plot <- function(df, species_name = "SNPL")
+{
+  dfA <-    
+    df %>% 
+    filter(species == species_name & 
+           age == "A" & 
+           !is.na(weight)) %>% 
+    mutate(weight = as.numeric(weight))
+  
+  dfJ <- 
+    df %>% 
+    filter(species == species_name & 
+           age == "J" & 
+           !is.na(weight)) %>% 
+    mutate(weight = as.numeric(weight))
+  
+  A_title <- list(
+    text = "Adults",
+    font = list(size = 14),
+    xref = "paper",
+    yref = "paper",
+    yanchor = "bottom",
+    xanchor = "center",
+    align = "center",
+    x = 0.5,
+    y = 1,
+    showarrow = FALSE
+  )
+  
+  J_title <- list(
+    text = "Juveniles",
+    font = list(size = 14),
+    xref = "paper",
+    yref = "paper",
+    yanchor = "bottom",
+    xanchor = "center",
+    align = "center",
+    x = 0.5,
+    y = 1,
+    showarrow = FALSE
+  )
+  
+  adult_hist <- 
+    plot_ly(dfA, y = ~weight, type = "histogram", opacity = 0.75) %>%
+    layout(xaxis = list(title = "Frequency"))
+  
+  adult_boxplot <-
+      plot_ly(dfA, y = ~weight, type = "box", marker = list(opacity = 0.5),
+              boxpoints = "outliers", jitter = 0.5,
+              pointpos = 0,
+              text = ~paste('Ring: ', ring,
+                            '</br> Year: ', year,
+                            '</br> Date: ', date)) %>%
+    layout(xaxis = list(showticklabels = FALSE))
+  
+  adult_subplot <- subplot(adult_hist, adult_boxplot, shareY = TRUE) %>%
+    layout(annotations = A_title,
+           xaxis = list(title = "Frequency"),
+           showlegend = FALSE)
+  
+  juvenile_hist <- 
+    plot_ly(dfJ, y = ~weight, type = "histogram", opacity = 0.75) %>%
+    layout(xaxis = list(title = "Frequency"))
+  
+  juvenile_boxplot <-
+    plot_ly(dfJ, y = ~weight, type = "box", marker = list(opacity = 0.5),
+            boxpoints = "outliers", jitter = 0.5,
+            pointpos = 0,
+            text = ~paste('Ring: ', ring,
+                          '</br> Year: ', year,
+                          '</br> Date: ', date)) %>%
+    layout(xaxis = list(showticklabels = FALSE))
+  
+  juvenile_subplot <- subplot(juvenile_hist, juvenile_boxplot, shareY = TRUE) %>%
+    layout(annotations = J_title,
+           showlegend = FALSE)
+  
+  subplot(adult_subplot, juvenile_subplot) %>%
+  layout(title = paste(ifelse(species_name == "SNPL", "Snowy Plover",
+                              ifelse(species_name == "WIPL", "Wilson's Plover",
+                                     ifelse(species_name == "KILL", "Killdeer", species_name))), 
+                       "Weight", sep = " "),
+         yaxis = list(title = "Weight (g)"),
+         xaxis = list(title = "Frequency"),
+         showlegend = FALSE,
+         margin = list(t = 50))
+}
+wing_plot <- function(df, species_name = "SNPL")
+{
+  dfA <-  
+    df %>% 
+    filter(species == species_name & 
+           age == "A" & 
+           !is.na(right_wing) & 
+           !is.na(left_wing)) %>% 
+    mutate(right_wing = as.numeric(right_wing),
+           left_wing = as.numeric(left_wing))
+  
+  dfJ <- 
+    df %>% 
+    filter(species == species_name & 
+           age == "J" & 
+           !is.na(right_wing) & 
+           !is.na(left_wing)) %>% 
+    mutate(right_wing = as.numeric(right_wing),
+           left_wing = as.numeric(left_wing))
+  
+  A_title <- list(
+    text = "Adults",
+    font = list(size = 14),
+    xref = "paper",
+    yref = "paper",
+    yanchor = "bottom",
+    xanchor = "center",
+    align = "center",
+    x = 0.5,
+    y = 1,
+    showarrow = FALSE
+  )
+  
+  J_title <- list(
+    text = "Juveniles",
+    font = list(size = 14),
+    xref = "paper",
+    yref = "paper",
+    yanchor = "bottom",
+    xanchor = "center",
+    align = "center",
+    x = 0.5,
+    y = 1,
+    showarrow = FALSE
+  )
+  
+  adult_plot <- 
+    plot_ly(dfA, x = ~right_wing, y = ~left_wing, type = "scatter", 
+            mode = 'markers', marker = list(opacity = 0.5), 
+            text = ~paste('Ring: ', ring,
+                          '</br> Year: ', year,
+                          '</br> Date: ', date,
+                          '</br> Moult: ', moult,
+                          '</br> Sex: ', sex,
+                          '</br> Species: ', species)) %>%
+    layout(annotations = A_title, xaxis = list(title = "Left (mm)"),
+           shapes = list(
+             type = "line",
+             line = list(color = "black"),
+             x0 = min(min(dfA$right_wing), min(dfA$left_wing)), 
+             x1 = max(max(dfA$right_wing), max(dfA$left_wing)),
+             y0 = min(min(dfA$right_wing), min(dfA$left_wing)), 
+             y1 = max(max(dfA$right_wing), max(dfA$left_wing))
+           ))
+  
+  juvenile_plot <- 
+    plot_ly(dfJ, x = ~right_wing, y = ~left_wing, type = "scatter", 
+            mode = 'markers', marker = list(opacity = 0.5), 
+            text = ~paste('Ring: ', ring,
+                          '</br> Year: ', year,
+                          '</br> Date: ', date,
+                          '</br> Moult: ', moult,
+                          '</br> Sex: ', sex,
+                          '</br> Species: ', species)) %>%
+    layout(annotations = J_title, xaxis = list(title = "Left (mm)"),
+           shapes = list(
+             type = "line",
+             line = list(color = "black"),
+             x0 = min(min(dfJ$right_wing), min(dfJ$left_wing)), 
+             x1 = max(max(dfJ$right_wing), max(dfJ$left_wing)),
+             y0 = min(min(dfJ$right_wing), min(dfJ$left_wing)), 
+             y1 = max(max(dfJ$right_wing), max(dfJ$left_wing))
+           ))
+  
+    subplot(adult_plot, juvenile_plot, shareX = TRUE, shareY = TRUE) %>%
+    layout(title = paste(ifelse(species_name == "SNPL", "Snowy Plover",
+                                ifelse(species_name == "WIPL", "Wilson's Plover",
+                                       ifelse(species_name == "KILL", "Killdeer", species_name))), 
+                         "Wings", sep = " "),
+           yaxis = list(title = "Right (mm)"),
+           showlegend = FALSE,
+           margin = list(t = 50))
+}
+```
+```{r}
+tarsus_plot(df = dbReadTable(Ceuta_OPEN, "Captures"), species_name = "SNPL")
+wing_plot(df = dbReadTable(Ceuta_OPEN, "Captures"), species_name = "SNPL")
+weight_plot(df = dbReadTable(Ceuta_OPEN, "Captures"), species_name = "SNPL")
+bill_plot(df = dbReadTable(Ceuta_OPEN, "Captures"), species_name = "SNPL")
+```
+
+### Broods datatable
+##### *Number of broods monitored*
+```{r}
+dbReadTable(Ceuta_OPEN, "Broods") %>%
+  dplyr::summarise(n_broods = n_distinct(ID)) %>%
+  kable(col.names = c("Number of broods monitored")) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
+##### *Annual variation in broods*
+```{r, fig.height=6, fig.width=6, fig.align='center'}
+annual_broods <- 
+  dbReadTable(Ceuta_OPEN, "Broods") %>% 
+  as.Date.multicol() %>% 
+  left_join(as.Date.multicol(dbReadTable(Ceuta_OPEN, "BirdRef")), by = "ID") %>% 
+  filter(!is.na(date)) %>% 
+  mutate(brood_age = ifelse(date-hatch_date < 0, 0, date-hatch_date)) %>% 
+  group_by(year.x, ID) %>%
+  dplyr::summarise(max_age = max(brood_age)) %>%
+  filter(!is.na(max_age)) %>%
+  mutate(week_bin = ifelse(max_age < 8, "1 week",
+         ifelse(max_age > 7 & max_age < 15, "2 weeks",
+                ifelse(max_age > 14 & max_age < 22, "3 weeks",
+                       ifelse(max_age > 21 & max_age < 29, "4 weeks",
+                              ifelse(max_age > 28 , "5+ weeks", "XXX")))))) %>%
+  ungroup() %>% 
+  mutate(year.x = as.factor(year.x),
+         week_bin = as.factor(week_bin)) %>%
+  dplyr::group_by(year.x, week_bin) %>%
+  dplyr::summarise(n_brods = n_distinct(ID)) %>%
+  ungroup() %>% 
+  mutate(n_brods = as.numeric(n_brods),
+         year.x = as.numeric(as.character(year.x)))
+
+ggplot2::ggplot(data = annual_broods, aes(y = n_brods, x = year.x, color = week_bin, fill = week_bin)) +
+  geom_bar(stat = "identity", alpha = 0.7) +
+  scale_fill_manual(values = plot_palette_brood,
+                    name = "Max age\nobserved") +
+  scale_color_manual(values = plot_palette_brood,
+                     name = "Max age\nobserved") +
+  ylab("Broods monitored") +
+  scale_x_continuous(labels = as.character(annual_broods$year.x), breaks = annual_broods$year.x)
+```
+
+##### *average number of resightings per brood*
+```{r}
+dbReadTable(Ceuta_OPEN, "Broods") %>%
+  group_by(ID) %>%
+  dplyr::summarise(n_obs_per_brood = dplyr::n()) %>%
+  dplyr::summarise(mean = mean(n_obs_per_brood)) %>%
+  kable(col.names = c("Average number of resightings per brood")) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
+##### *Average interval in days between brood resightings*
+```{r}
+dbReadTable(Ceuta_OPEN, "Broods") %>% 
+  as.Date.multicol() %>% 
+  dplyr::group_by(year, ID) %>%
+  dplyr::summarise(n_obs_per_brood = dplyr::n(),
+                   min_date = min(date),
+                   max_date = max(date)) %>%
+  dplyr::mutate(diff_days = max_date - min_date) %>%
+  dplyr::mutate(avg_days = diff_days/n_obs_per_brood) %>%
+  dplyr::ungroup() %>%
+  dplyr::summarise(avg_days_per_brood = mean(avg_days, na.rm = TRUE)) %>%
+  kable(col.names = c("Average interval in days between brood resightings")) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
+### Resights datatable
+##### *Number of resightings*
+```{r}
+dbReadTable(Ceuta_OPEN, "Resights") %>%
+  dplyr::summarise(n_resightings = dplyr::n()) %>%
+  kable(col.names = c("Total number of resightings")) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
+##### *Average number of resightings per individual over their observed lifetime in the population*
+```{r}
+dbReadTable(Ceuta_OPEN, "Resights") %>%
+  group_by(code) %>% 
+  dplyr::summarise(n_resightings_per_bird = dplyr::n()) %>%
+  dplyr::summarise(mean = mean(n_resightings_per_bird)) %>% 
+  kable(col.names = c("Average number of resightings per individual")) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
+### BirdRef datatable
+##### *Number of unique families monitored*
+```{r}
+dbReadTable(Ceuta_OPEN, "BirdRef") %>%
+  dplyr::summarise(n_families = n_distinct(ID)) %>%
+  kable(col.names = c("Number of families monitored")) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
+##### *Number of nests discovered after hatch*
+(Note: these have negative nest IDs to indicate that they were initially found as broods)
+```{r}
+dbReadTable(Ceuta_OPEN, "BirdRef") %>%
+  filter(str_detect(string = nest, pattern = "-")) %>%
+  group_by(year) %>% 
+  summarise(n_neg_fams = n_distinct(ID))
+```
+
+##### *Proportion of families with both, either, or no parents identified*
+```{r}
+dbReadTable(Ceuta_OPEN, "BirdRef") %>%
+  mutate(completeness = ifelse(!is.na(male) & !is.na(female), "both", 
+                               ifelse(!is.na(male) & is.na(female), "male",
+                                      ifelse(is.na(male) & !is.na(female), "female",
+                                             ifelse(is.na(male) & is.na(female), "neither",
+                                                    "XXXX"))))) %>% 
+  group_by(completeness) %>% 
+  summarise(tally = dplyr::n()) %>%
+  kable(col.names = c("Type", "Frequency")) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
+### Summarise fieldwork effort
+##### *Calculate the number of days observers were in the field collecting data*
+```{r}
+# Captures
+cap_days <- 
+  dbReadTable(Ceuta_OPEN, "Captures") %>%
+  as.Date.multicol() %>%
+  group_by(date) %>%
+  dplyr::summarise(n_days = dplyr::n()) %>% 
+  arrange(desc(n_days))
+
+nes_days <- 
+  dbReadTable(Ceuta_OPEN, "Nests") %>%
+  as.Date.multicol() %>%
+  group_by(found_date) %>%
+  dplyr::summarise(n_days = dplyr::n()) %>% 
+  arrange(desc(n_days))
+
+bro_days <- 
+  dbReadTable(Ceuta_OPEN, "Broods") %>%
+  mutate(year_date = paste(year, date, sep = "_")) %>%
+  group_by(year_date) %>%
+  dplyr::summarise(n_days = dplyr::n()) %>% 
+  arrange(desc(n_days)) 
+
+res_days <- 
+  dbReadTable(Ceuta_OPEN, "Resights") %>%
+  mutate(year_date = paste(year, date, sep = "_")) %>%
+  group_by(year_date) %>%
+  dplyr::summarise(n_days = dplyr::n()) %>% 
+  arrange(desc(n_days)) 
+
+bind_rows(cap_days, nes_days, bro_days, res_days) %>%
+  summarise(n_days = n_distinct(year_date))
+```
+
+
+## Example Analytical Workflow
+### Sex-specific Ontogeny
+
+In this section we provide an example workflow of how to use the CeutaOPEN database in R to assess sex differences in chick developement from hatching until fledging. In the field, we attempt to recapture uniquely marked chicks repeatedly until they fledge to assess their condition by measuring their tarsi (i.e., the lower leg segment) and body mass. These individuals are also molecularly sexed from a small blood sample that is collected during their first capture - allowing a confident assessment of sex-specific growth rates.
+
+##### 1) Load R packages
+```{chick growth packages}
+# RSQLite is needed to bring the SQL database into the R environment
+library(RSQLite)
+
+# dplyr is useful for wrangling data prior to analysis
+library(dplyr)
+
+# ggplot is useful for data visualization
+library(ggplot2)
+
+# bamlss is used for "Bayesian Additive Models for Location, Scale, and Shape"
+# and is needed here to determine the sex-specfic growth trends while controlling
+# for repeated measures within individuals and random annual variation
+library(bamlss)
+
+# gridExtra allows us to create a beautiful custom layout for plotting the results
+library(gridExtra)
+
+# lubridate enables the use of simple functions related to time strings
+library(lubridate)
+
+# stringr offers useful functions to manipulate character srings
+library(stringr)
+```
+
+##### 2) Custom Functions
+Convert all columns with date into the `%Y-%m-%d` format. 
+Note the the current format of CeutaOPEN tables is the internal `Date` format of R and represents the number of days since January 1, 1970, the 'Unix epoch' (i.e., "the 0-second of one of Humankind's first computer operating systems")
+```{plover date conversion function}
+# date conversion function (columns with `date` or `alive` in their header are 
+# converted to the `%Y-%m-%d` format)
+as.Date.multicol <- function(df){
+  if(sum(grepl(paste(c("date", "alive"), collapse = "|"), names(df))) > 1){
+    
+    df[, which(grepl(paste(c("date", "alive"), collapse = "|"), names(df)))] <-
+      lapply(df[, which(grepl(paste(c("date", "alive"), collapse = "|"), names(df)))],
+             function(x) as.Date(x, origin = "1970-01-01"))
+    
+  }
+  else{
+    
+    df[, which(grepl(paste(c("date", "alive"), collapse = "|"), names(df)))] <- 
+      as.Date(df[, which(grepl(paste(c("date", "alive"), collapse = "|"), 
+                               names(df)))], 
+              origin = "1970-01-01")
+    
+  }
+  
+  return(df)
+}
+```
+
+##### 3) Load CeutaOPEN into R
+Load the CeutaOPEN database into R using the RSQLite package
+```{r}
+Ceuta_OPEN <- RSQLite::dbConnect(SQLite(), dbname = "data/Ceuta_OPEN_version_releases/Ceuta_OPEN_v1.sqlite")
+```
+
+##### 4) Data Wrangling
+In this case we need to wrangle the `Captures` table and extract all cases in which a chick has been captured more than once, calculate the average tarsus length based on the left and right tarsal measurement in each capture, and convert the date column into the appropriate format discussed in step 3 above.
+```{r}
+multi_cap_chicks <-
+  # read the Captures table
+  dbReadTable(Ceuta_OPEN, "Captures") %>% 
+  # average the left and right tarsus length measurements in to one value
+  mutate(tarsus = rowMeans(cbind(as.numeric(left_tarsus), 
+                                 as.numeric(right_tarsus)), na.rm = TRUE)) %>% 
+  # subset to juvenile captures
+  filter(age == "J",
+  # remove observations that are missing information for weight and tarsus
+         !is.na(weight) & !is.na(tarsus),
+  # subset to individuals for which we have the determined the sex molecularly
+         sex %in% c("M", "F")) %>% 
+  # group by bird identity
+  group_by(ring) %>% 
+  # subset to juveniles with more than 1 capture
+  filter(dplyr::n() > 1) %>% 
+  # specifiy the biological nest ID as the ID of the earliest capture (i.e.,
+  # brood mixing can occur and create multiple nest IDs for a chick in the
+  # capture data)
+  mutate(bio_ID = ID[which.min(date)]) %>% 
+  # filter(bio_ID != ID) %>% 
+  # convert to dataframe
+  data.frame() %>% 
+  # convert date columns to the %Y-%m-%d format
+  as.Date.multicol() %>% 
+  # select the relevent columns
+  select(ring, year, bio_ID, age, sex, date, time, weight, tarsus)
+```
+
+Wrangle the `Nests` table to extract the hatch dates of each of the chicks isolated in the previous step.
+```{r}
+hatch_dates <- 
+  # read the Nests table
+  dbReadTable(Ceuta_OPEN, "Nests") %>% 
+  # extract only the nests that contain chicks in the previous capture subset
+  filter(ID %in% multi_cap_chicks$bio_ID) %>% 
+  # subset the nests that have hatch date information
+  filter(fate == "Hatch") %>% 
+  # define as a dataframe
+  data.frame() %>% 
+  # classify date columns in the appropriate format
+  as.Date.multicol() %>%
+  # subset the result as simply the nest ID and their resepective hatch dates
+  select(ID, end_date) %>% 
+  # rename the columns
+  rename(bio_ID = ID,
+         hatch_date = end_date)
+```
+
+Join the chick capture history to the hatch dates and prep variables for modelling
+```{r}
+chicks_and_hatch_dates <- 
+  # join the hatch dates to the chick captures
+  left_join(x = multi_cap_chicks, y = hatch_dates, by = "bio_ID") %>%
+  # classify variables as factor or numeric and calculate age at capture
+  ungroup() %>% 
+  mutate(age = as.numeric(date - hatch_date),
+         year = as.factor(year),
+         weight = as.numeric(weight),
+         tarsus = as.numeric(tarsus),
+         ring = as.factor(ring),
+         sex = as.factor(sex)) %>% 
+  # specify ages less than 0 as 0 (i.e., hatch dates represent the average hatch
+  # date of a brood and thus the earliest chick to hatch in a nest could be up
+  # 2 days earlier than the nest's hatch date)
+  mutate(age = ifelse(age < 0, 0, age)) %>% 
+  # scale the numeric variables in preparation for modelling
+  mutate(age.z = scale(age),
+         weight.z = scale(weight),
+         tarsus.z = scale(tarsus)) %>% 
+  # remove individuals that don't have an age value (i.e., hatch date was NA)
+  filter(!is.na(age))
+```
+
+Create sex-specific dataframes
+```{r}
+female_chicks <- 
+  chicks_and_hatch_dates %>%
+  # subset to females
+  filter(sex == "F") 
+
+male_chicks <- 
+  chicks_and_hatch_dates %>% 
+  # subset to males
+  filter(sex == "M")
+```
+
+Wrangle the `Captures` table to extract the adult weights of the chicks used in the analysis above
+```{r}
+adult_measurements <- 
+  dbReadTable(Ceuta_OPEN, "Captures") %>%
+  # subset to adults that have the same ring as the chicks indentified earlier
+  filter(ring %in% chicks_and_hatch_dates$ring) %>% 
+  filter(age == "A") %>% 
+  # calculate the average tarsus length across multiple adult captures
+  mutate(left_tarsus = as.numeric(left_tarsus),
+         right_tarsus = as.numeric(right_tarsus),
+         weight = as.numeric(weight)) %>% 
+  group_by(ring, sex) %>% 
+  summarise(weight = mean(weight, na.rm = TRUE),
+            left_tarsus = mean(left_tarsus, na.rm = TRUE),
+            right_tarsus = mean(right_tarsus, na.rm = TRUE)) %>% 
+  mutate(tarsus = rowMeans(cbind(left_tarsus, right_tarsus), na.rm = TRUE),
+         age = "A") %>% 
+  select(ring, weight, tarsus, age, sex)
+```
+
+##### 5) Modelling
+Run models to estimate trend lines of tarsus growth and body mass change over age using a Bayesian generalized additive model with year and individual as random effects.
+```{r, cache=TRUE, results='hide'}
+weight_mod_F <- bamlss(weight.z ~ s(age.z) + s(ring, bs = "re") + 
+                         s(year, bs = "re") + s(ring, age.z, bs = "re"), 
+                       data = female_chicks)
+tarsus_mod_F <- bamlss(tarsus.z ~ s(age.z) + s(ring, bs = "re") + 
+                         s(year, bs = "re") + s(ring, age.z, bs = "re"), 
+                       data = female_chicks)
+weight_mod_M <- bamlss(weight.z ~ s(age.z) + s(ring, bs = "re") + 
+                         s(year, bs = "re") + s(ring, age.z, bs = "re"), 
+                       data = male_chicks)
+tarsus_mod_M <- bamlss(tarsus.z ~ s(age.z) + s(ring, bs = "re") + 
+                         s(year, bs = "re") + s(ring, age.z, bs = "re"), 
+                       data = male_chicks)
+```
+
+Extract the mean and sd statistics and re-scale the model coefficients - including the upper and lower 95% credible intervals
+```{r}
+weight.z_center_F <- attributes(female_chicks$weight.z)$`scaled:center`
+weight.z_scale_F <- attributes(female_chicks$weight.z)$`scaled:scale`
+tarsus.z_center_F <- attributes(female_chicks$tarsus.z)$`scaled:center`
+tarsus.z_scale_F <- attributes(female_chicks$tarsus.z)$`scaled:scale`
+
+female_chicks_output <- 
+  female_chicks %>% 
+  mutate(lwrm_w = fitted(weight_mod_F, term = c("s(age.z)"))$mu[, 1],
+         fitm_w = fitted(weight_mod_F, term = c("s(age.z)"))$mu[, 2],
+         uprm_w = fitted(weight_mod_F, term = c("s(age.z)"))$mu[, 3],
+         lwrm_t = fitted(tarsus_mod_F, term = c("s(age.z)"))$mu[, 1],
+         fitm_t = fitted(tarsus_mod_F, term = c("s(age.z)"))$mu[, 2],
+         uprm_t = fitted(tarsus_mod_F, term = c("s(age.z)"))$mu[, 3]) %>% 
+  mutate(fitm33_w = fitm_w * weight.z_scale_F + weight.z_center_F,
+         lwrm33_w = lwrm_w * weight.z_scale_F + weight.z_center_F,
+         uprm33_w = uprm_w * weight.z_scale_F + weight.z_center_F,
+         fitm33_t = fitm_t * tarsus.z_scale_F + tarsus.z_center_F,
+         lwrm33_t = lwrm_t * tarsus.z_scale_F + tarsus.z_center_F,
+         uprm33_t = uprm_t * tarsus.z_scale_F + tarsus.z_center_F) %>% 
+  arrange(age)
+
+weight.z_center_M <- attributes(male_chicks$weight.z)$`scaled:center`
+weight.z_scale_M <- attributes(male_chicks$weight.z)$`scaled:scale`
+tarsus.z_center_M <- attributes(male_chicks$tarsus.z)$`scaled:center`
+tarsus.z_scale_M <- attributes(male_chicks$tarsus.z)$`scaled:scale`
+
+male_chicks_output <- 
+  male_chicks %>% 
+  mutate(lwrm_w = fitted(weight_mod_M, term = c("s(age.z)"))$mu[, 1],
+         fitm_w = fitted(weight_mod_M, term = c("s(age.z)"))$mu[, 2],
+         uprm_w = fitted(weight_mod_M, term = c("s(age.z)"))$mu[, 3],
+         lwrm_t = fitted(tarsus_mod_M, term = c("s(age.z)"))$mu[, 1],
+         fitm_t = fitted(tarsus_mod_M, term = c("s(age.z)"))$mu[, 2],
+         uprm_t = fitted(tarsus_mod_M, term = c("s(age.z)"))$mu[, 3]) %>% 
+  mutate(fitm33_w = fitm_w * weight.z_scale_M + weight.z_center_M,
+         lwrm33_w = lwrm_w * weight.z_scale_M + weight.z_center_M,
+         uprm33_w = uprm_w * weight.z_scale_M + weight.z_center_M,
+         fitm33_t = fitm_t * tarsus.z_scale_M + tarsus.z_center_M,
+         lwrm33_t = lwrm_t * tarsus.z_scale_M + tarsus.z_center_M,
+         uprm33_t = uprm_t * tarsus.z_scale_M + tarsus.z_center_M) %>% 
+  arrange(age)
+
+chick_growth_results <- 
+  bind_rows(female_chicks_output, male_chicks_output)
+```
+
+##### 7) Plotting
+Plot the sex-specific ontenigenic change in tarsus length and body mass over age while comparing the end result to the adult distributions
+```{r, warning=FALSE, fig.height=8, fig.width=6, fig.align='center'}
+# define the color palatte to use for visualizing males and females
+sex_palette <- brewer.pal(7, "Dark2")[c(2,1)]
+
+# draw the chick tarsus plot
+chick_tarsus_plot <- 
+  ggplot() +
+  geom_line(data = chick_growth_results, aes(y = fitm33_t, x = age, 
+                                      color = sex),
+            size = 1) +
+  geom_ribbon(data = chick_growth_results, aes(ymin = uprm33_t, ymax = lwrm33_t, x = age, 
+                                        fill = sex), alpha = 0.3) +
+  geom_point(data = chick_growth_results, aes(y = tarsus, x = age, 
+                                       fill = sex, 
+                                       color = sex),
+             alpha = 0.3, size = 2) +
+  ylab("Tarsus length ± 95% CI (mm)") +
+  xlab("Days since hatching") +
+  scale_color_manual(values = sex_palette,
+                     name = "Sex",
+                     labels = c("Female", "Male")) +
+  scale_fill_manual(values = sex_palette,
+                    name = "Sex",
+                    labels = c("Female", "Male")) +
+  theme(legend.position = c(0.2, 0.8),
+        axis.title.x = element_blank(),
+        axis.text.x  = element_blank()) +
+  scale_y_continuous(limits = c(15, 30))
+
+# draw the adult tarsus plot
+adult_tarsus_plot <- 
+  ggplot(adult_measurements, aes(tarsus)) + 
+  geom_density(aes(fill = sex), alpha = 0.3, color = "grey40") + 
+  scale_fill_manual(values = sex_palette) + 
+  coord_flip() +
+  theme_void() +
+  theme(legend.position = "none") +
+  scale_x_continuous(limits = c(15, 30)) +
+  geom_hline(yintercept = 0, colour = "white", size = 1) +
+  annotate(geom = "text", y = 0.4, x = 29, label = "Adult\ndistribution", 
+           color = "black", size = 3, fontface = 'italic')
+
+# draw the chick weight plot
+chick_weight_plot <- 
+  ggplot() +
+  geom_line(data = chick_growth_results, aes(y = fitm33_w, x = age, 
+                                      color = sex),
+            size = 1) +
+  geom_ribbon(data = chick_growth_results, aes(ymin = uprm33_w, ymax = lwrm33_w, x = age, 
+                                        fill = sex), alpha = 0.3) +
+  geom_point(data = chick_growth_results, aes(y = weight, x = age, 
+                                       fill = sex, 
+                                       color = sex),
+             alpha = 0.3, size = 2) +
+  ylab("Body mass ± 95% CI (g)") +
+  xlab("Days since hatching") +
+  scale_color_manual(values = sex_palette,
+                     name = "Sex",
+                     labels = c("Female", "Male")) +
+  scale_fill_manual(values = sex_palette,
+                    name = "Sex",
+                    labels = c("Female", "Male")) +
+  theme(legend.position = "none") +
+  scale_y_continuous(limits = c(0, 45))
+
+# draw the adult weight plot
+adult_weight_plot <- 
+  ggplot(adult_measurements, aes(weight)) + 
+  geom_density(aes(fill = sex), alpha = 0.3, color = "grey40") + 
+  scale_fill_manual(values = sex_palette) + 
+  coord_flip() +
+  theme_void() +
+  theme(legend.position = "none") +
+  scale_x_continuous(limits = c(0, 45)) +
+  geom_hline(yintercept = 0, colour = "white", size = 1)
+
+# arrange all plots together on one canvas
+gridExtra::grid.arrange(chick_tarsus_plot, adult_tarsus_plot, 
+                        chick_weight_plot, adult_weight_plot, 
+                        ncol = 2, nrow = 2, widths=c(4, 1), heights=c(4, 4))
+```
+
+### Housekeeping
+Disconnect from the database
+```{r}
+dbDisconnect(Ceuta_OPEN)
+```
+
+Display R version and package information for time-dependent reproducibility
+```{r}
+sessionInfo()
+```
