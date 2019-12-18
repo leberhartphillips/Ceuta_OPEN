@@ -48,6 +48,11 @@ library(plotly)
 # webshot::install_phantomjs()
 ```
 
+```{r}
+
+```
+
+
 ```{r functions, include=FALSE}
 as.Date.multicol <- function(df){
   if(sum(grepl(paste(c("date", "alive"), collapse = "|"), names(df))) > 1){
@@ -979,7 +984,7 @@ library(dplyr)
 library(ggplot2)
 
 # bamlss is used for "Bayesian Additive Models for Location, Scale, and Shape"
-# and is needed here to determine the sex-specfic growth trends while controlling
+# and is needed here to determine the sex-specific growth trends while controlling
 # for repeated measures within individuals and random annual variation
 library(bamlss)
 
