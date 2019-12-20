@@ -3,9 +3,23 @@
 ### Version 1.0.0 - December 20, 2019
 #### Luke J. Eberhart-Phillips, Medardo Cruz-López, Lydia Lozano-Angulo, Salvador Gómez del Ángel, Wendoly Rojas-Abreu, and Clemens Küpper
 
-In this repository you can find all the raw data we have collected from 1,598 individually marked snowy plovers (_Charadrius nivosus_) monitored between 2006 and 2016 at [Bahía de Ceuta](https://www.google.com/maps/@23.9197739,-106.9668912,2358m/data=!3m1!1e3 "Google Map Satellite") – an important breeding site in western Mexico.
+In this repository you can find all the raw data we have collected from 1,600 individually marked snowy plovers (_Charadrius nivosus_) monitored between 2006 and 2016 at [Bahía de Ceuta](https://www.google.com/maps/@23.9197739,-106.9668912,2358m/data=!3m1!1e3 "Google Map Satellite") – an important breeding site in western Mexico.
 
-[**`Ceuta_OPEN_v1.sqlite`**](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/Ceuta_OPEN.sqlite "Ceuta OPEN data") contains the SQL (Structured Query Language) database of the following 5 tables (please click the black arrows to see column definitions):
+This repository is also available on the *Open Science Framework* at [DOI 10.17605/OSF.IO/3K4FH](https://osf.io/3k4fh/ "OSF CeutaOPEN repo") and is accompanied by the preprint found here: 
+
+[Eberhart-Phillips, LJ, Cruz-López, M, Lozano-Angulo, L, Gómez del Ángel, S, Rojas-Abreu, W, & Küpper, C. CeutaOPEN: Individual-based field observations of breeding snowy plovers *Charadrius nivosus*. *bioRxiv* 2019.12.20.884825 (2019)](https://www.biorxiv.org/content/10.1101/2019.12.20.884825v1 "bioRxiv manuscript")
+
+When using the database, please cite as:
+*Eberhart-Phillips et al (2019). CeutaOPEN v1.0. Open Science Framework. DOI 10.17605/OSF.IO/3K4FH. Retrieved: ADD DATETIME*
+
+**`R/`**
+
+  - `Ceuta_OPEN.Rmd` and `Ceuta_OPEN.html` contains a detailed commented analytical workflow for utilizing `CetuaOPEN` with the RSQLite and dplyr packages in R.
+  
+
+**`data/Ceuta_OPEN_version_releases/`**
+
+  - [`Ceuta_OPEN_v1.sqlite`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/Ceuta_OPEN.sqlite "Ceuta OPEN data") contains the SQL (Structured Query Language) database of the following 5 tables (please click the black arrows to see column definitions):
 
   <details>
   <summary>A. <b><code>Nests</code></b> – a table of all nests found and monitored.</summary>
