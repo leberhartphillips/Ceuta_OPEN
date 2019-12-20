@@ -1,7 +1,7 @@
 ---
 title: "CeutaOPEN"
 author: |
-  | Luke J. Eberhart-Phillips, Medardo Cruz-López, Clemens Küpper
+  | Luke J. Eberhart-Phillips, Medardo Cruz-López, Lydia Lozano-Angulo, Salvador Gómez del Ángel, Wendoly Rojas-Abreu, and Clemens Küpper
   | *Max Planck Institute for Ornithology, Seewiesen, Germany*
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 always_allow_html: yes
@@ -15,22 +15,18 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 ```
 
-In this R Markdown document we provide a simple workflow in R to introduce users to the Ceuta OPEN database presented in our paper. In short, the database contains all of our raw field data collected from >1,300 individually marked snowy plovers (_Charadrius nivosus_) monitored between 2006 and 2016 at [Bahía de Ceuta](https://www.google.com/maps/@23.9197739,-106.9668912,2358m/data=!3m1!1e3 "Google Map Satellite") – an important breeding site in western Mexico. To access the database and this accompanying R Markdown code, please visit this [GitHub](https://github.com/leberhartphillips/Ceuta_OPEN) repository. An explanation of the datatables in the repository can be found in the **`README.md`** file. Please don't hesitate to contact Luke at `luke.eberhart[at]orn.mpg.de` if you have any questions.
+In this R Markdown document we provide a simple workflow in R to introduce users to the CeutaOPEN database presented in our paper. In short, the database contains all of our raw field data collected from 1,598 individually marked snowy plovers (_Charadrius nivosus_) monitored between 2006 and 2016 at [Bahía de Ceuta](https://www.google.com/maps/@23.9197739,-106.9668912,2358m/data=!3m1!1e3 "Google Map Satellite") – an important breeding site in western Mexico. To access the database and this accompanying R Markdown code, please visit this [GitHub](https://github.com/leberhartphillips/Ceuta_OPEN) repository. An explanation of the datatables in the repository can be found in the **`README.md`** file. Please don't hesitate to contact Luke Eberhart-Phillips (`luke.eberhart[at]orn.mpg.de`) or Clemens Küpper (`ckuepper[at]orn.mpg.de`) if you have any questions.
 
 ## Prerequisites
 
-* To utilize this R Markdown code you need a `data` subfolder containing the **`Ceuta_OPEN.sqlite`** database downloaded from the [GitHub](https://github.com/leberhartphillips/Ceuta_OPEN) repository:
-```{r data download, eval=FALSE}
-dir.create("data", showWarnings = FALSE)
-download.file(url = "https://github.com/leberhartphillips/Ceuta_OPEN/raw/master/Ceuta_OPEN.sqlite",
-              destfile = "data/Ceuta_OPEN.sqlite", mode = "wb")
-```
+* To utilize this R Markdown code you need to download the [CeutaOPEN GitHub](https://github.com/leberhartphillips/Ceuta_OPEN) repository containing the **`Ceuta_OPEN.sqlite`** database and other dependent files and folders. Simply follow the link and click on the green *Clone or download* button on the right side of the page and select *Download ZIP*. For a smooth workflow, we recommend creating an RStudio project within the downloaded folder and conducting all further analyses within this directory.
 
 * The following packages are needed to employ this R Markdown document and can be easily installed from [CRAN](http://cran.r-project.org/) by uncommenting the `install.packages` function below:
 ```{r libraries, message=FALSE}
 # install.packages(c("RSQLite", "dplyr", "dbplyr", "knitr", "stringr", "sp", "rgdal", 
 #                    "mapview", "RColorBrewer", "webshot", "leaflet", "ggplot2",
 #                    "kableExtra", "plotly", "bamlss", "gridExtra"))
+# webshot::install_phantomjs()
 library(RSQLite)
 library(dplyr)
 library(dbplyr)
@@ -45,27 +41,22 @@ library(leaflet)
 library(ggplot2)
 library(kableExtra)
 library(plotly)
-# webshot::install_phantomjs()
 ```
 
-```{r}
-
-```
-
-
-```{r functions, include=FALSE}
+* The following `as.Date.multicol()` function is useful for transforming date strings within CeutaOPEN tables prior to analysis. Note: date strings in CeutaOPEN are always stored in the internal `Date` format of R, which represents the number of days since January 1, 1970, the ‘Unix epoch’.
+```{r functions}
 as.Date.multicol <- function(df){
-  if(sum(grepl(paste(c("date", "alive"), collapse = "|"), names(df))) > 1){
+  if(sum(grepl(paste(c("date", "alive", "manip"), collapse = "|"), names(df))) > 1){
     
-    df[, which(grepl(paste(c("date", "alive"), collapse = "|"), names(df)))] <-
-      lapply(df[, which(grepl(paste(c("date", "alive"), collapse = "|"), names(df)))],
+    df[, which(grepl(paste(c("date", "alive", "manip"), collapse = "|"), names(df)))] <-
+      lapply(df[, which(grepl(paste(c("date", "alive", "manip"), collapse = "|"), names(df)))],
              function(x) as.Date(x, origin = "1970-01-01"))
     
   }
   else{
     
-    df[, which(grepl(paste(c("date", "alive"), collapse = "|"), names(df)))] <- 
-      as.Date(df[, which(grepl(paste(c("date", "alive"), collapse = "|"), 
+    df[, which(grepl(paste(c("date", "alive", "manip"), collapse = "|"), names(df)))] <- 
+      as.Date(df[, which(grepl(paste(c("date", "alive", "manip"), collapse = "|"), 
                                names(df)))], 
               origin = "1970-01-01")
     
@@ -1005,17 +996,17 @@ Note the the current format of CeutaOPEN tables is the internal `Date` format of
 # date conversion function (columns with `date` or `alive` in their header are 
 # converted to the `%Y-%m-%d` format)
 as.Date.multicol <- function(df){
-  if(sum(grepl(paste(c("date", "alive"), collapse = "|"), names(df))) > 1){
+  if(sum(grepl(paste(c("date", "alive", "manip"), collapse = "|"), names(df))) > 1){
     
-    df[, which(grepl(paste(c("date", "alive"), collapse = "|"), names(df)))] <-
-      lapply(df[, which(grepl(paste(c("date", "alive"), collapse = "|"), names(df)))],
+    df[, which(grepl(paste(c("date", "alive", "manip"), collapse = "|"), names(df)))] <-
+      lapply(df[, which(grepl(paste(c("date", "alive", "manip"), collapse = "|"), names(df)))],
              function(x) as.Date(x, origin = "1970-01-01"))
     
   }
   else{
     
-    df[, which(grepl(paste(c("date", "alive"), collapse = "|"), names(df)))] <- 
-      as.Date(df[, which(grepl(paste(c("date", "alive"), collapse = "|"), 
+    df[, which(grepl(paste(c("date", "alive", "manip"), collapse = "|"), names(df)))] <- 
+      as.Date(df[, which(grepl(paste(c("date", "alive", "manip"), collapse = "|"), 
                                names(df)))], 
               origin = "1970-01-01")
     
@@ -1248,7 +1239,7 @@ adult_tarsus_plot <-
   scale_x_continuous(limits = c(15, 30)) +
   geom_hline(yintercept = 0, colour = "white", size = 1) +
   annotate(geom = "text", y = 0.4, x = 29, label = "Adult\ndistribution", 
-           color = "black", size = 3, fontface = 'italic')
+           color = "black", size = 4, fontface = 'italic')
 
 # draw the chick weight plot
 chick_weight_plot <- 
@@ -1270,7 +1261,9 @@ chick_weight_plot <-
   scale_fill_manual(values = sex_palette,
                     name = "Sex",
                     labels = c("Female", "Male")) +
-  theme(legend.position = "none") +
+  theme(legend.position = "none",
+        axis.title.x = element_text(size = 16),
+        axis.text.x  = element_text(size = 12, angle = 0, vjust = 1, hjust = 0.5)) +
   scale_y_continuous(limits = c(0, 45))
 
 # draw the adult weight plot
