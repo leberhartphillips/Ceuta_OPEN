@@ -10,7 +10,8 @@ This repository is also available on the *Open Science Framework* at [DOI 10.176
 [Eberhart-Phillips, LJ, Cruz-López, M, Lozano-Angulo, L, Gómez del Ángel, S, Rojas-Abreu, W, & Küpper, C. CeutaOPEN: Individual-based field observations of breeding snowy plovers *Charadrius nivosus*. *bioRxiv* 2019.12.20.884825 (2019)](https://www.biorxiv.org/content/10.1101/2019.12.20.884825v1 "bioRxiv manuscript")
 
 When using the database, please cite as:
-*Eberhart-Phillips et al (2019). CeutaOPEN v1.0. Open Science Framework. DOI 10.17605/OSF.IO/3K4FH. Retrieved: ADD DATETIME*
+
+*Eberhart-Phillips et al (2019). CeutaOPEN v1.0. Open Science Framework. DOI 10.17605/OSF.IO/3K4FH*
 
 **`R/`**
 
