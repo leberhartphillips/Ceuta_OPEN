@@ -178,4 +178,4 @@ When using the database, please cite as:
   
 #### Terms of Use
 
-The CeutaOPEN database shall be used in accordance with the Creative Commons Attribution 4.0 International Public License (see **`license.txt`** for more details). For all projects making considerable use of the `CeutaOPEN` database, it is encouraged that users to reach out to Luke Eberhart-Phillips (luke.eberhart[at]orn.mpg.de) or Clemens Küpper (ckuepper[at]orn.mpg.de) to offer the opportunity to comment prior to the publication of the work.
+The CeutaOPEN database shall be used in accordance with the Creative Commons Attribution 4.0 International Public License (see **`license.txt`** for more details). For all projects making considerable use of the `CeutaOPEN` database, it is encouraged that users reach out to Luke Eberhart-Phillips (luke.eberhart[at]orn.mpg.de) or Clemens Küpper (ckuepper[at]orn.mpg.de) to offer the opportunity to comment prior to the publication of the work.
