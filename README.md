@@ -18,12 +18,12 @@ When using the database, please cite as:
 #### Repository Contents
 **`R/`**
 
-  - `Ceuta_OPEN.Rmd` and `Ceuta_OPEN.html` contains a detailed commented analytical workflow for utilizing `CetuaOPEN` with the RSQLite and dplyr packages in R.
+  - [`Ceuta_OPEN.Rmd`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.Rmd "RMarkdown") and [`Ceuta_OPEN.html`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.html "html") contains a detailed commented analytical workflow for utilizing `CetuaOPEN` with the RSQLite and dplyr packages in R.
   
 
 **`data/Ceuta_OPEN_version_releases/`**
 
-  - [`Ceuta_OPEN_v1.sqlite`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/Ceuta_OPEN.sqlite "Ceuta OPEN data") contains the SQL (Structured Query Language) database of the following 5 tables (please click the black arrows to see column definitions):
+  - [`Ceuta_OPEN_v1.sqlite`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/data/Ceuta_OPEN_version_releases/Ceuta_OPEN_v1.sqlite "Ceuta OPEN data") contains the SQL (Structured Query Language) database of the following 5 tables (please click the black arrows to see column definitions):
 
   <details>
   <summary>A. <b><code>Nests</code></b> – a table of all nests found and monitored.</summary>
