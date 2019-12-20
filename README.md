@@ -1,7 +1,9 @@
 # CeutaOPEN
-## An open access database of snowy plover breeding ecology
+## Individual-based field observations of breeding snowy plovers *Charadrius nivosus*
 ### Version 1.0.0 - December 20, 2019
 #### Luke J. Eberhart-Phillips, Medardo Cruz-López, Lydia Lozano-Angulo, Salvador Gómez del Ángel, Wendoly Rojas-Abreu, and Clemens Küpper
+
+[![Ceuta Snowy Plovers](https://lukeeberhartphillips.files.wordpress.com/2019/03/ceuta_open_logo_cut-1.png)](https://www.youtube.com/watch?v=h4OxHZXADA8)
 
 In this repository you can find all the raw data we have collected from 1,600 individually marked snowy plovers (_Charadrius nivosus_) monitored between 2006 and 2016 at [Bahía de Ceuta](https://www.google.com/maps/@23.9197739,-106.9668912,2358m/data=!3m1!1e3 "Google Map Satellite") – an important breeding site in western Mexico.
 
@@ -13,6 +15,7 @@ When using the database, please cite as:
 
 *Eberhart-Phillips et al (2019). CeutaOPEN v1.0. Open Science Framework. DOI 10.17605/OSF.IO/3K4FH*
 
+#### Repository Contents
 **`R/`**
 
   - `Ceuta_OPEN.Rmd` and `Ceuta_OPEN.html` contains a detailed commented analytical workflow for utilizing `CetuaOPEN` with the RSQLite and dplyr packages in R.
@@ -173,4 +176,6 @@ When using the database, please cite as:
   16.	`manip`: date of the experimental manipulation (stored in the internal `Date` format of R and represents the number of days since January 1, 1970, the ‘Unix epoch’. Converted easily in R using ‘as.Date(x, origin = “1970-01-01”)’)
   </details>
   
-[![Ceuta Snowy Plovers](https://lukeeberhartphillips.files.wordpress.com/2019/03/ceuta_open_logo_cut-1.png)](https://www.youtube.com/watch?v=h4OxHZXADA8)
+#### Terms of Use
+
+The CeutaOPEN database shall be used in accordance with the below detailed Creative Commons Attribution 4.0 International Public License (see **`license.txt`** for more details). For all projects making considerable use of the `CeutaOPEN` database, it is encouraged that users to reach out to Luke Eberhart-Phillips (luke.eberhart[at]orn.mpg.de) or Clemens Küpper (ckuepper[at]orn.mpg.de) to offer the opportunity to comment prior to the publication of the work.
