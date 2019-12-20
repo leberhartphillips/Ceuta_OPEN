@@ -3,6 +3,8 @@ title: "CeutaOPEN"
 author: |
   | Luke J. Eberhart-Phillips, Medardo Cruz-López, Lydia Lozano-Angulo, Salvador Gómez del Ángel, Wendoly Rojas-Abreu, and Clemens Küpper
   | *Max Planck Institute for Ornithology, Seewiesen, Germany*
+  |
+  | *Supplementary File 1*
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 always_allow_html: yes
 output:
@@ -16,6 +18,8 @@ knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 ```
 
 In this R Markdown document we provide a simple workflow in R to introduce users to the CeutaOPEN database presented in our paper. In short, the database contains all of our raw field data collected from 1,598 individually marked snowy plovers (_Charadrius nivosus_) monitored between 2006 and 2016 at [Bahía de Ceuta](https://www.google.com/maps/@23.9197739,-106.9668912,2358m/data=!3m1!1e3 "Google Map Satellite") – an important breeding site in western Mexico. To access the database and this accompanying R Markdown code, please visit this [GitHub](https://github.com/leberhartphillips/Ceuta_OPEN) repository. An explanation of the datatables in the repository can be found in the **`README.md`** file. Please don't hesitate to contact Luke Eberhart-Phillips (`luke.eberhart[at]orn.mpg.de`) or Clemens Küpper (`ckuepper[at]orn.mpg.de`) if you have any questions.
+
+The document is best viewed in html on an internet browser as many of the graphics are dynamic.
 
 ## Prerequisites
 
@@ -920,43 +924,6 @@ dbReadTable(Ceuta_OPEN, "BirdRef") %>%
   kable_styling() %>%
   scroll_box(width = "100%")
 ```
-
-### Summarise fieldwork effort
-##### *Calculate the number of days observers were in the field collecting data*
-```{r}
-# Captures
-cap_days <- 
-  dbReadTable(Ceuta_OPEN, "Captures") %>%
-  as.Date.multicol() %>%
-  group_by(date) %>%
-  dplyr::summarise(n_days = dplyr::n()) %>% 
-  arrange(desc(n_days))
-
-nes_days <- 
-  dbReadTable(Ceuta_OPEN, "Nests") %>%
-  as.Date.multicol() %>%
-  group_by(found_date) %>%
-  dplyr::summarise(n_days = dplyr::n()) %>% 
-  arrange(desc(n_days))
-
-bro_days <- 
-  dbReadTable(Ceuta_OPEN, "Broods") %>%
-  mutate(year_date = paste(year, date, sep = "_")) %>%
-  group_by(year_date) %>%
-  dplyr::summarise(n_days = dplyr::n()) %>% 
-  arrange(desc(n_days)) 
-
-res_days <- 
-  dbReadTable(Ceuta_OPEN, "Resights") %>%
-  mutate(year_date = paste(year, date, sep = "_")) %>%
-  group_by(year_date) %>%
-  dplyr::summarise(n_days = dplyr::n()) %>% 
-  arrange(desc(n_days)) 
-
-bind_rows(cap_days, nes_days, bro_days, res_days) %>%
-  summarise(n_days = n_distinct(year_date))
-```
-
 
 ## Example Analytical Workflow
 ### Sex-specific Ontogeny
