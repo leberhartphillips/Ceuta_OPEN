@@ -23,7 +23,7 @@ When using the database, please cite as:
 
 **`data/Ceuta_OPEN_version_releases/`**
 
-  - [`Ceuta_OPEN_v1.sqlite`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/data/Ceuta_OPEN_version_releases/Ceuta_OPEN_v1.sqlite "Ceuta OPEN data") contains the SQL (Structured Query Language) database of the following 5 tables (please click the black arrows to see column definitions):
+  - [`Ceuta_OPEN_v1-1.sqlite`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/data/Ceuta_OPEN_version_releases/Ceuta_OPEN_v1-1.sqlite "Ceuta OPEN data") contains the SQL (Structured Query Language) database of the following 5 tables (please click the black arrows to see column definitions):
 
   <details>
   <summary>A. <b><code>Nests</code></b> – a table of all nests found and monitored.</summary>
