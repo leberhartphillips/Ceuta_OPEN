@@ -1,11 +1,11 @@
 # CeutaOPEN
 ## Individual-based field observations of breeding snowy plovers *Charadrius nivosus*
-### Version 1.0.0 - December 20, 2019
-#### Luke J. Eberhart-Phillips, Medardo Cruz-López, Lydia Lozano-Angulo, Salvador Gómez del Ángel, Wendoly Rojas-Abreu, and Clemens Küpper
+### Version 1.1.0 - March 25, 2020
+#### Luke J. Eberhart-Phillips, Medardo Cruz-López, Lydia Lozano-Angulo, Salvador Gómez del Ángel, Wendoly Rojas-Abreu, Marcos Bucio-Pacheco, and Clemens Küpper
 
 [![Ceuta Snowy Plovers](https://lukeeberhartphillips.files.wordpress.com/2019/03/ceuta_open_logo_cut-1.png)](https://www.youtube.com/watch?v=h4OxHZXADA8)
 
-In this repository you can find all the raw data we have collected from 1,600 individually marked snowy plovers (_Charadrius nivosus_) monitored between 2006 and 2016 at [Bahía de Ceuta](https://www.google.com/maps/@23.9197739,-106.9668912,2358m/data=!3m1!1e3 "Google Map Satellite") – an important breeding site in western Mexico.
+In this repository you can find all the raw data we have collected from 1,647 individually marked snowy plovers (_Charadrius nivosus_) monitored between 2006 and 2016 at [Bahía de Ceuta](https://www.google.com/maps/@23.9197739,-106.9668912,2358m/data=!3m1!1e3 "Google Map Satellite") – an important breeding site in western Mexico.
 
 This repository is also available on the *Open Science Framework* at [DOI 10.17605/OSF.IO/3K4FH](https://osf.io/3k4fh/ "OSF CeutaOPEN repo") and is accompanied by the preprint found here: 
 
@@ -13,7 +13,7 @@ This repository is also available on the *Open Science Framework* at [DOI 10.176
 
 When using the database, please cite as:
 
-*Eberhart-Phillips et al (2019). CeutaOPEN v1.0. Open Science Framework. DOI 10.17605/OSF.IO/3K4FH*
+*Eberhart-Phillips et al (2020). CeutaOPEN v1.1. Open Science Framework. DOI 10.17605/OSF.IO/3K4FH*
 
 #### Repository Contents
 **`R/`**
