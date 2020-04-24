@@ -1,6 +1,6 @@
 # CeutaOPEN
 ## Individual-based field observations of breeding snowy plovers *Charadrius nivosus*
-### Version 1.1.0 - March 25, 2020
+### Version 1.2 - April 24, 2020
 #### Luke J. Eberhart-Phillips, Medardo Cruz-López, Lydia Lozano-Angulo, Salvador Gómez del Ángel, Wendoly Rojas-Abreu, Marcos Bucio-Pacheco, and Clemens Küpper
 
 [![Ceuta Snowy Plovers](https://lukeeberhartphillips.files.wordpress.com/2019/03/ceuta_open_logo_cut-1.png)](https://www.youtube.com/watch?v=h4OxHZXADA8)
