@@ -13,7 +13,7 @@ This repository is also available on the *Open Science Framework* at [DOI 10.176
 
 When using the database, please cite as:
 
-*Eberhart-Phillips et al (2020). CeutaOPEN v1.1. Open Science Framework. DOI 10.17605/OSF.IO/3K4FH*
+*Eberhart-Phillips et al (2020). CeutaOPEN v1.2. Open Science Framework. DOI 10.17605/OSF.IO/3K4FH*
 
 #### Repository Contents
 **`R/`**
