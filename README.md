@@ -1,6 +1,6 @@
 # CeutaOPEN
 ## Individual-based field observations of breeding snowy plovers *Charadrius nivosus*
-### Version 1.3 - May 6, 2020
+### Version 1.4 - May 7, 2020
 #### Luke J. Eberhart-Phillips, Medardo Cruz-López, Lydia Lozano-Angulo, Salvador Gómez del Ángel, Wendoly Rojas-Abreu, Marcos Bucio-Pacheco, and Clemens Küpper
 
 [![Ceuta Snowy Plovers](https://lukeeberhartphillips.files.wordpress.com/2019/03/ceuta_open_logo_cut-1.png)](https://www.youtube.com/watch?v=h4OxHZXADA8)
@@ -23,7 +23,7 @@ When using the database, please cite as:
 
 **`data/Ceuta_OPEN_version_releases/`**
 
-  - [`Ceuta_OPEN_v1-3.sqlite`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/data/Ceuta_OPEN_version_releases/Ceuta_OPEN_v1-3.sqlite "Ceuta OPEN data") contains the SQL (Structured Query Language) database of the following 5 tables (please click the black arrows to see column definitions):
+  - [`Ceuta_OPEN_v1-4.sqlite`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/data/Ceuta_OPEN_version_releases/Ceuta_OPEN_v1-4.sqlite "Ceuta OPEN data") contains the SQL (Structured Query Language) database of the following 5 tables (please click the black arrows to see column definitions):
 
   <details>
   <summary>A. <b><code>Nests</code></b> – a table of all nests found and monitored.</summary>
@@ -165,7 +165,7 @@ When using the database, please cite as:
   5.	`family`: unique identified of family (unique within year and within site). Families found as a nests retain `nest` ID found in **`Nests`** table, whereas families found as broods hatching from unknown nests have a negative `brood` ID (e.g., `-2`) found in **`Broods`** table)
   6.	`ID`: a concatenation of `year`, `site`, and `nest` to make a unique value across all sites and years
   7.	`nest_initiation_date`: estimated date when the first egg of the nest was laid (i.e., its 'initiation'). The estimate is calculated by subtracting the age in days of the oldest egg (determined by the floatation scores`float1`, `float2`, and `float3` defined above in the `Nests` table) and a 5-day laying period for three-egg clutches or a 3-day laying period for two-egg clutches or a 1-day laying period for one-egg clutches (egg-laying intervals are based on [Page et al. 2009](http://obpa-nc.org/DOI-AdminRecord/0071935-0072002.pdf "Snowy Plover (Charadrius alexandrinus), The Birds of North America Online")). Determining initiation dates of clutches found at stage `F` is imprecise, and thus we estimated the intiation date by subtracting 25 days from the hatch date (i.e., the average length of incubation in this population) and an additional 5, 3, or 1 days for the laying period depending on the clutch size. For nests found at stage `F` that failed before hatching, the nest initiation date is `NA`. Stored in the internal `Date` format of R and represents the number of days since January 1, 1970, the ‘Unix epoch’. Converted easily in R using ‘as.Date(x, origin = “1970-01-01”)’
-  8.	`hatching_date`: date nest hatched (stored in the internal `Date` format of R and represents the number of days since January 1, 1970, the ‘Unix epoch’. Converted easily in R using ‘as.Date(x, origin = “1970-01-01”)’; "NA" if nest `fate` was other than "Hatch" in **`Nests`** table)
+  8.	`hatch_date`: date nest hatched (stored in the internal `Date` format of R and represents the number of days since January 1, 1970, the ‘Unix epoch’. Converted easily in R using ‘as.Date(x, origin = “1970-01-01”)’; "NA" if nest `fate` was other than "Hatch" in **`Nests`** table)
   9.	`male`: ring ID of male parent observed with nest/brood
   10.	`female`: ring ID of female parent observed with nest/brood
   11.	`chick1`: ring ID of first chick seen in brood
