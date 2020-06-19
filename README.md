@@ -16,12 +16,12 @@ When using the database, please cite the aforementioned *Scientific Data* articl
 *Eberhart-Phillips et al. (2020). CeutaOPEN v1.5. Open Science Framework. DOI 10.17605/OSF.IO/3K4FH*
 
 #### Repository Contents
-**`R/`**
+**`R/`**:
 
-  - [`Ceuta_OPEN.Rmd`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.Rmd "RMarkdown") and [`Ceuta_OPEN.html`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.html "html") contains a detailed commented analytical workflow for utilizing `CetuaOPEN` with the RSQLite and dplyr packages in R. This is a dynamic document, so please download it and open it within your internet browser for optimal viewing.
+  - [`Ceuta_OPEN.Rmd`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.Rmd "RMarkdown") and [`Ceuta_OPEN.html`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.html "html") contains a detailed commented analytical workflow for utilizing `CeutaOPEN` with the RSQLite and dplyr packages in R. This is a dynamic document, so please download it and open it within your internet browser for optimal viewing.
   
 
-**`data/Ceuta_OPEN_version_releases/`**
+**`data/Ceuta_OPEN_version_releases/`**:
 
 To maintain reproducibility of past and future works using the database, we have archived all versions of CeutaOPEN in this directory. The latest version of the database contains the most up-to-date corrections and additions. If your study utilizes an older version, please cite the correct version accordingly. The following information describes the lastest release:
 
