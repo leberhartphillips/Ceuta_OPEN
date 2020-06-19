@@ -1,24 +1,24 @@
 # CeutaOPEN
 ## Individual-based field observations of breeding snowy plovers *Charadrius nivosus*
-### Version 1.4 - May 7, 2020
+### Version 1.5 - June 19, 2020
 #### Luke J. Eberhart-Phillips, Medardo Cruz-López, Lydia Lozano-Angulo, Salvador Gómez del Ángel, Wendoly Rojas-Abreu, Marcos Bucio-Pacheco, and Clemens Küpper
 
 [![Ceuta Snowy Plovers](https://lukeeberhartphillips.files.wordpress.com/2019/03/ceuta_open_logo_cut-1.png)](https://www.youtube.com/watch?v=h4OxHZXADA8)
 
 In this repository you can find all the raw data we have collected from 1,647 individually marked snowy plovers (_Charadrius nivosus_) monitored between 2006 and 2016 at [Bahía de Ceuta](https://www.google.com/maps/@23.9197739,-106.9668912,2358m/data=!3m1!1e3 "Google Map Satellite") – an important breeding site in western Mexico.
 
-This repository is also available on the *Open Science Framework* at [DOI 10.17605/OSF.IO/3K4FH](https://osf.io/3k4fh/ "OSF CeutaOPEN repo") and is accompanied by the preprint found here: 
+This repository is also available on the *Open Science Framework* at [DOI 10.17605/OSF.IO/3K4FH](https://osf.io/3k4fh/ "OSF CeutaOPEN repo") and is accompanied by the peer-reviewed article found here:
 
-[Eberhart-Phillips, LJ, Cruz-López, M, Lozano-Angulo, L, Gómez del Ángel, S, Rojas-Abreu, W, & Küpper, C. CeutaOPEN: Individual-based field observations of breeding snowy plovers *Charadrius nivosus*. *bioRxiv* 2019.12.20.884825 (2019)](https://www.biorxiv.org/content/10.1101/2019.12.20.884825v1 "bioRxiv manuscript")
+[Eberhart-Phillips, LJ, Cruz-López, M, Lozano-Angulo, L, Gómez del Ángel, S, Rojas-Abreu, W, Bucio-Pacheco, M, & Küpper, C. CeutaOPEN, Individual-based field observations of breeding snowy plovers *Charadrius nivosus*. *Scientific Data* **7**:149 (2020)](https://www.nature.com/articles/s41597-020-0490-y "Scientific Data manuscript")
 
-When using the database, please cite as:
+When using the database, please cite the aforementioned *Scientific Data* article in addition to latest version of the OSF repository:
 
-*Eberhart-Phillips et al (2020). CeutaOPEN v1.3. Open Science Framework. DOI 10.17605/OSF.IO/3K4FH*
+*Eberhart-Phillips et al (2020). CeutaOPEN v1.5. Open Science Framework. DOI 10.17605/OSF.IO/3K4FH*
 
 #### Repository Contents
 **`R/`**
 
-  - [`Ceuta_OPEN.Rmd`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.Rmd "RMarkdown") and [`Ceuta_OPEN.html`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.html "html") contains a detailed commented analytical workflow for utilizing `CetuaOPEN` with the RSQLite and dplyr packages in R.
+  - [`Ceuta_OPEN.Rmd`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.Rmd "RMarkdown") and [`Ceuta_OPEN.html`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.html "html") contains a detailed commented analytical workflow for utilizing `CetuaOPEN` with the RSQLite and dplyr packages in R. THis is a dynamic document, so please download it and open it within your internet browser for optimal viewing.
   
 
 **`data/Ceuta_OPEN_version_releases/`**
