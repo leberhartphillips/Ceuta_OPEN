@@ -13,7 +13,7 @@ This repository is also available on the *Open Science Framework* at [DOI 10.176
 
 When using the database, please cite the aforementioned *Scientific Data* article in addition to latest version of the OSF repository:
 
-*Eberhart-Phillips et al (2020). CeutaOPEN v1.5. Open Science Framework. DOI 10.17605/OSF.IO/3K4FH*
+*Eberhart-Phillips et al. (2020). CeutaOPEN v1.5. Open Science Framework. DOI 10.17605/OSF.IO/3K4FH*
 
 #### Repository Contents
 **`R/`**
@@ -22,8 +22,8 @@ When using the database, please cite the aforementioned *Scientific Data* articl
   
 
 **`data/Ceuta_OPEN_version_releases/`**
-
-  - [`Ceuta_OPEN_v1-4.sqlite`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/data/Ceuta_OPEN_version_releases/Ceuta_OPEN_v1-4.sqlite "Ceuta OPEN data") contains the SQL (Structured Query Language) database of the following 5 tables (please click the black arrows to see column definitions):
+To maintain reproducibility of past and future works using the database, we have archived all versions of CeutaOPEN in this directory. The latest version of the database contains the most up-to-date corrections and additions. If your study utilizes an older version, please cite the correct version accordingly. Here is the lastest release:
+  - [`Ceuta_OPEN_v1-5.sqlite`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/data/Ceuta_OPEN_version_releases/Ceuta_OPEN_v1-5.sqlite "Ceuta OPEN data") contains the SQL (Structured Query Language) database of the following 5 tables (please click the black arrows to see column definitions):
 
   <details>
   <summary>A. <b><code>Nests</code></b> – a table of all nests found and monitored.</summary>
