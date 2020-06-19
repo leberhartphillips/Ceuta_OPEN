@@ -73,7 +73,7 @@ Our database is stored as an SQLite object to make it convenient for users to ut
 
 Connect to the latest version of the **`Ceuta_OPEN`** database
 ```{r data import}
-Ceuta_OPEN <- RSQLite::dbConnect(SQLite(), dbname="data/Ceuta_OPEN_version_releases/Ceuta_OPEN_v1-4.sqlite")
+Ceuta_OPEN <- RSQLite::dbConnect(SQLite(), dbname="data/Ceuta_OPEN_version_releases/Ceuta_OPEN_v1-5.sqlite")
 ```
 Our database includes five tables that encompass all of our field observations. Our field methods for obtaining the data presented in these tables is described in the *Methods* section of our paper.
 
