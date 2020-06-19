@@ -18,11 +18,13 @@ When using the database, please cite the aforementioned *Scientific Data* articl
 #### Repository Contents
 **`R/`**
 
-  - [`Ceuta_OPEN.Rmd`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.Rmd "RMarkdown") and [`Ceuta_OPEN.html`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.html "html") contains a detailed commented analytical workflow for utilizing `CetuaOPEN` with the RSQLite and dplyr packages in R. THis is a dynamic document, so please download it and open it within your internet browser for optimal viewing.
+  - [`Ceuta_OPEN.Rmd`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.Rmd "RMarkdown") and [`Ceuta_OPEN.html`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.html "html") contains a detailed commented analytical workflow for utilizing `CetuaOPEN` with the RSQLite and dplyr packages in R. This is a dynamic document, so please download it and open it within your internet browser for optimal viewing.
   
 
 **`data/Ceuta_OPEN_version_releases/`**
-To maintain reproducibility of past and future works using the database, we have archived all versions of CeutaOPEN in this directory. The latest version of the database contains the most up-to-date corrections and additions. If your study utilizes an older version, please cite the correct version accordingly. Here is the lastest release:
+
+To maintain reproducibility of past and future works using the database, we have archived all versions of CeutaOPEN in this directory. The latest version of the database contains the most up-to-date corrections and additions. If your study utilizes an older version, please cite the correct version accordingly. The following information describes the lastest release:
+
   - [`Ceuta_OPEN_v1-5.sqlite`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/data/Ceuta_OPEN_version_releases/Ceuta_OPEN_v1-5.sqlite "Ceuta OPEN data") contains the SQL (Structured Query Language) database of the following 5 tables (please click the black arrows to see column definitions):
 
   <details>
