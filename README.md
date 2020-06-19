@@ -18,7 +18,7 @@ When using the database, please cite the aforementioned *Scientific Data* articl
 #### Repository Contents
 **`R/`**:
 
-  - [`Ceuta_OPEN.Rmd`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.Rmd "RMarkdown") and [`Ceuta_OPEN.html`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.html "html") contains a detailed commented analytical workflow for utilizing `CeutaOPEN` with the RSQLite and dplyr packages in R. This is a dynamic document, so please download it and open it within your internet browser for optimal viewing.
+  - [`Ceuta_OPEN.Rmd`](https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.Rmd "RMarkdown") and [`Ceuta_OPEN.html`](https://htmlpreview.github.io/?https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.html "html") contains a detailed commented analytical workflow for utilizing `CeutaOPEN` with the RSQLite and dplyr packages in R. This is a dynamic document, so please download it (or click [`this link`](https://htmlpreview.github.io/?https://github.com/leberhartphillips/Ceuta_OPEN/blob/master/R/Ceuta_OPEN.html "html")) and open it within your internet browser for optimal viewing.
   
 
 **`data/Ceuta_OPEN_version_releases/`**:
