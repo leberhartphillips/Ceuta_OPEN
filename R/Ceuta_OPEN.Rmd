@@ -995,7 +995,7 @@ as.Date.multicol <- function(df){
 ##### 3) Load CeutaOPEN into R
 Load the CeutaOPEN database into R using the RSQLite package
 ```{r}
-Ceuta_OPEN <- RSQLite::dbConnect(SQLite(), dbname = "data/Ceuta_OPEN_version_releases/Ceuta_OPEN_v1.sqlite")
+Ceuta_OPEN <- RSQLite::dbConnect(SQLite(), dbname = "data/Ceuta_OPEN_version_releases/Ceuta_OPEN_v1-5.sqlite")
 ```
 
 ##### 4) Data Wrangling
@@ -1122,7 +1122,7 @@ weight_mod_M <- bamlss::bamlss(weight.z ~ s(age.z) + s(ring, bs = "re") +
                                data = male_chicks)
 tarsus_mod_M <- bamlss::bamlss(tarsus.z ~ s(age.z) + s(ring, bs = "re") +
                                s(year, bs = "re") + s(ring, age.z, bs = "re"),
-                               data = male_chicks)
+                               data =male_chicks)
 ```
 
 Extract the mean and sd statistics and re-scale the model coefficients - including the upper and lower 95% credible intervals
