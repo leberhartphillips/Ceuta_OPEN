@@ -1,4 +1,4 @@
 *.java linguist-detectable=false
 *.sqlite linguist-detectable=true
-*.html linguist-detectable=true
+*.html linguist-detectable=false
 *.Rmd linguist-detectable=true
