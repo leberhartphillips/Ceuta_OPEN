@@ -1,2 +1,2 @@
-*.html linguist-detectable=false
-*.md linguist-detectable=false
+* linguist-vendored
+*.R linguist-vendored=false
